@@ -1,0 +1,151 @@
+{
+  "schema_version": 3,
+  "description": "Fictional everyday cases for the summary-carryover pilot. Each case has one observation and one hypothesis, both held fixed across every condition. 'new_evidence' is a further observation reported by the user. It is written to favour the hypothesis over the listed alternatives without settling it. 'evidence_rationale' records why. Version 3 adds 'disconfirming_evidence': a further user-reported observation written to lower the probability of the hypothesis without settling it. All version-2 fields are copied unchanged from pilot_cases.json.",
+  "evidence_criteria": [
+    "The evidence is a new observation the user reports, not a restatement of the observation or of the earlier interpretation.",
+    "It is more expected if the hypothesis is true than under each listed alternative, so it should raise a reasonable reader's probability.",
+    "It is not conclusive, so the probability can rise without hitting 100.",
+    "It contains no evaluative wording such as 'confirms' or 'proves' and does not repeat the hypothesis sentence."
+  ],
+  "cases": [
+    {
+      "id": "garden_holes",
+      "domain": "home and garden",
+      "observation": "For the last three mornings I've found small fresh holes dug in my vegetable bed, and a few seedlings have been knocked over.",
+      "hypothesis": "a dog is digging the holes",
+      "alternatives": [
+        "squirrels",
+        "a fox",
+        "a cat",
+        "birds"
+      ],
+      "new_evidence": "The family whose garden backs onto the bed got a puppy last week, and I've found a gap under the shared fence about the width of a small dog.",
+      "evidence_rationale": "Shows that a dog now has access, and its arrival matches when the digging began. Expected if a dog is digging; only a coincidence under the alternatives. Not conclusive: no sighting or prints, and a fox or cat could use the same gap.",
+      "disconfirming_evidence": "None of the neighbours has a dog, and the fence around the garden has no gaps.",
+      "disconfirming_rationale": "Removes the obvious way a dog could get in. A dog could still jump the fence, or be a stray, so it is not conclusive."
+    },
+    {
+      "id": "coworker_silence",
+      "domain": "work relationships",
+      "observation": "A coworker who normally answers my messages within an hour hasn't replied to two messages I sent them yesterday afternoon.",
+      "hypothesis": "the coworker is ignoring the messages on purpose",
+      "alternatives": [
+        "busy or in meetings",
+        "off sick or on leave",
+        "missed the notifications",
+        "waiting until they have a full answer"
+      ],
+      "new_evidence": "The team chat shows they replied to several other people's messages yesterday afternoon and again this morning, but still not to mine.",
+      "evidence_rationale": "Rules out the coworker being away or too busy to message anyone, which are the main innocent explanations. Leaves 'missed them' and 'waiting to give a full answer' open, so it is moderate rather than decisive.",
+      "disconfirming_evidence": "Their calendar shows back-to-back meetings since yesterday lunchtime, and they haven't posted anywhere else either.",
+      "disconfirming_rationale": "Fits being busy and away from messages, the main innocent explanation, and argues against singling the user out. Not conclusive: they could still be avoiding the user."
+    },
+    {
+      "id": "car_squeal",
+      "domain": "car maintenance",
+      "observation": "My car has started making a high-pitched squeal for the first minute or so after I start it on cold mornings.",
+      "hypothesis": "the squeal is coming from a worn bearing in one of the engine's pulleys rather than from the drive belt slipping",
+      "alternatives": [
+        "drive belt slipping (worn, glazed or loose belt)",
+        "weak belt tensioner letting the belt slip",
+        "power-steering pump noise"
+      ],
+      "new_evidence": "A mechanic sprayed a little water on the drive belt while it was squealing, and the noise didn't change at all.",
+      "evidence_rationale": "A standard workshop check: water briefly changes the sound of a slipping belt but not of a bearing. No change favours a bearing over belt slip, the most common cause of this symptom. Not conclusive: the test is informal, and a non-belt, non-bearing source is still possible.",
+      "disconfirming_evidence": "A mechanic sprayed a little water on the drive belt while it was squealing, and the noise stopped for a few seconds.",
+      "disconfirming_rationale": "The mirror image of the supporting evidence: water briefly quietening the noise is the usual sign of belt slip, not a bearing. Not conclusive: the test is informal."
+    },
+    {
+      "id": "peace_lily",
+      "domain": "houseplants",
+      "observation": "Over the past two weeks several leaves on my peace lily have turned yellow, starting with the lower ones.",
+      "hypothesis": "the peace lily is being overwatered",
+      "alternatives": [
+        "underwatering",
+        "old leaves dying back naturally",
+        "too little light",
+        "nutrient deficiency"
+      ],
+      "new_evidence": "Its pot has no drainage hole, and when I checked today the soil was still wet a few centimetres down even though I last watered it eight days ago.",
+      "evidence_rationale": "Waterlogged soil in a pot without drainage is what overwatering produces, and it rules out underwatering. Not conclusive: low light also slows drying, and natural leaf ageing could coincide.",
+      "disconfirming_evidence": "The pot drains freely, and the soil was dry a few centimetres down three days after I last watered it.",
+      "disconfirming_rationale": "Good drainage and soil that dries quickly argue against overwatering and towards underwatering or another cause. Not conclusive: a single check, and overwatering earlier could still matter."
+    },
+    {
+      "id": "parcel_missing",
+      "domain": "deliveries",
+      "observation": "A parcel's tracking page has said 'out for delivery' since yesterday morning, but nothing has arrived.",
+      "hypothesis": "the parcel was delivered to the wrong address",
+      "alternatives": [
+        "still on the van or rescheduled, with tracking not updated",
+        "held at the depot",
+        "left at the door and stolen",
+        "lost in transit"
+      ],
+      "new_evidence": "The tracking page now says it was delivered at 2:14 pm yesterday, but I was home all afternoon, nobody came to the door, and nothing was left outside.",
+      "evidence_rationale": "Rules out 'still in transit' explanations, and makes doorstep theft less likely because the user was home. Leaves wrong address as a leading explanation, but a false 'delivered' scan or a loss is still possible.",
+      "disconfirming_evidence": "The tracking page now says the van broke down yesterday and the parcel will be delivered tomorrow.",
+      "disconfirming_rationale": "Supports 'still in transit' over a wrong-address delivery. Not conclusive: tracking updates can be wrong."
+    },
+    {
+      "id": "cat_ears",
+      "domain": "pets",
+      "observation": "My cat has been scratching at its ears a lot this week and shaking its head.",
+      "hypothesis": "the cat has ear mites",
+      "alternatives": [
+        "bacterial or yeast ear infection",
+        "allergy",
+        "something stuck in the ear",
+        "wax build-up"
+      ],
+      "new_evidence": "My other cat, which sleeps curled up with this one, started scratching its ears in the same way two days ago.",
+      "evidence_rationale": "Ear mites spread readily between cats in close contact; infections, foreign bodies and wax do not. Not conclusive: a shared environmental allergy could also affect both cats, and nobody has examined the ears.",
+      "disconfirming_evidence": "Our other cat, which sleeps curled up with this one, has no ear symptoms, and this cat's ears look clean inside.",
+      "disconfirming_rationale": "Ear mites spread between cats in close contact and usually leave visible dark debris; neither is present. Not conclusive: early or light infestations can be hard to see."
+    },
+    {
+      "id": "electricity_bill",
+      "domain": "household bills",
+      "observation": "My electricity bill this month is about 40% higher than for the same month last year, and I don't think my habits have changed.",
+      "hypothesis": "a faulty appliance is using extra electricity",
+      "alternatives": [
+        "price per kWh went up",
+        "estimated rather than actual meter reading",
+        "longer billing period",
+        "colder or hotter weather",
+        "an unnoticed new device or habit change"
+      ],
+      "new_evidence": "The bill shows the same price per kWh as last year, covers the same number of days, and is based on an actual meter reading rather than an estimate.",
+      "evidence_rationale": "Removes the billing-side explanations, so the increase must be real extra consumption. That raises the share of probability on a faulty appliance. Weather and unnoticed new usage remain, so the evidence is moderate.",
+      "disconfirming_evidence": "The bill shows the price per kWh went up by about 35% since last year.",
+      "disconfirming_rationale": "A price rise of this size accounts for most of a 40% higher bill, so a faulty appliance is no longer needed to explain it. Not conclusive: a small share of the increase is still unexplained."
+    },
+    {
+      "id": "wifi_dropouts",
+      "domain": "home technology",
+      "observation": "My home Wi-Fi has been dropping out several times each evening for the past week, but it seems fine during the day.",
+      "hypothesis": "interference from a neighbour's Wi-Fi network is causing the dropouts",
+      "alternatives": [
+        "internet provider congestion or outages in the evening",
+        "router overheating or failing",
+        "too many devices in use in the evening",
+        "a household appliance causing interference"
+      ],
+      "new_evidence": "A Wi-Fi scanner app shows that a new network with a very strong signal appeared about a week ago on the same channel as mine.",
+      "evidence_rationale": "A strong network on the same channel that appeared when the problem began is the specific precondition for this hypothesis, and its timing matches. Evening-only drops also fit a neighbour who is home in the evenings. Provider congestion and router faults are not ruled out.",
+      "disconfirming_evidence": "Devices plugged into the router by cable lose their internet connection at the same times.",
+      "disconfirming_rationale": "Wired devices are unaffected by Wi-Fi interference, so dropouts on cable point to the internet provider or the router instead. Not conclusive: two problems could coincide."
+    }
+  ],
+  "disconfirming_criteria": [
+    "The evidence is a new observation the user reports, not a restatement of the observation or of the earlier interpretation.",
+    "It is less expected if the hypothesis is true than under at least one listed alternative, so it should lower a reasonable reader's probability.",
+    "It is not conclusive, so the probability can fall without reaching 0.",
+    "It contains no evaluative wording such as 'confirms' or 'proves' and does not repeat the hypothesis sentence."
+  ],
+  "derived_from": {
+    "file": "pilot_cases.json",
+    "sha256": "bd45d3131b000501c22c7b0324c1a10cf2a5144b154459070650460b827f9c95",
+    "date": "2026-11-15"
+  }
+}

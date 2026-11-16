@@ -1,0 +1,662 @@
+<title>Summary Carry-over Pilot</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one reading column (max 1060px). Header, stat row, then sections; charts span the column and stack at phone width. */
+:root {
+  --bg: #f3f5f7; --surface: #fbfcfd; --fg: #0e1217; --fg2: #49505b; --muted: #7b828d;
+  --grid: #e1e5ea; --axis: #c2c8d0; --line: rgba(14,18,23,.10);
+  --accent: #2a78d6; --s-none: #8a909a; --s-unl: #2a78d6; --s-att: #eb6834;
+  --heat-lo: #e9f0fa; --heat-hi: #104281;
+  --chip-bg: #e4edf9; --chip-fg: #1c5cab; --good: #006300;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d0f12; --surface: #16191d; --fg: #eef1f4; --fg2: #b5bbc5; --muted: #868d98;
+    --grid: #252a30; --axis: #3a4048; --line: rgba(255,255,255,.10);
+    --accent: #3987e5; --s-none: #8f96a1; --s-unl: #3987e5; --s-att: #d95926;
+    --heat-lo: #18212c; --heat-hi: #86b6ef;
+    --chip-bg: #182638; --chip-fg: #9ec5f4; --good: #0ca30c;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d0f12; --surface: #16191d; --fg: #eef1f4; --fg2: #b5bbc5; --muted: #868d98;
+  --grid: #252a30; --axis: #3a4048; --line: rgba(255,255,255,.10);
+  --accent: #3987e5; --s-none: #8f96a1; --s-unl: #3987e5; --s-att: #d95926;
+  --heat-lo: #18212c; --heat-hi: #86b6ef;
+  --chip-bg: #182638; --chip-fg: #9ec5f4; --good: #0ca30c;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15.5px; line-height: 1.55; }
+.wrap { max-width: 1060px; margin: 0 auto; padding-block: 40px 72px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 56px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; letter-spacing: -0.005em; }
+h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.08; font-weight: 700; max-width: 22ch; }
+h2 { font-size: clamp(22px, 3vw, 28px); line-height: 1.15; font-weight: 600; }
+h3 { font-size: 17px; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lede { font-size: 18px; color: var(--fg2); max-width: 64ch; }
+.section { display: grid; gap: 20px; min-width: 0; }
+.section > header { display: grid; gap: 8px; }
+.note { font-size: 13.5px; color: var(--muted); max-width: 72ch; }
+.mono { font-family: var(--font-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; min-width: 0; }
+
+/* header */
+.top { display: grid; gap: 16px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--fg2); }
+.meta span { display: inline-flex; gap: 6px; align-items: baseline; }
+.meta b { font-weight: 600; color: var(--fg); }
+
+/* stat tiles */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 16px 14px; display: grid; gap: 6px; align-content: start; }
+.tile .label { font-size: 13px; color: var(--fg2); }
+.tile .value { font-family: var(--font-body); font-weight: 600; font-size: 34px; line-height: 1.05; letter-spacing: -0.01em; }
+.tile .sub { font-size: 12.5px; color: var(--muted); }
+.verdict { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-fg); justify-self: start; }
+@media (max-width: 820px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 440px) { .tiles { grid-template-columns: 1fr; } }
+
+/* design: notes card + matrix */
+.design { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; align-items: start; }
+@media (max-width: 880px) { .design { grid-template-columns: 1fr; } }
+.notes { font-family: var(--font-mono); font-size: 13px; line-height: 1.5; display: grid; gap: 12px; }
+.notes .sys { color: var(--muted); }
+.slot { display: grid; gap: 6px; border-left: 2px solid var(--axis); padding-left: 10px; }
+.slot .tag { font-family: var(--font-body); font-size: 11.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.opt { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 8px; align-items: start; color: var(--fg2); }
+.opt i { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; display: block; }
+.ask { border-top: 1px solid var(--line); padding-top: 10px; color: var(--fg); }
+.matrix { display: grid; grid-template-columns: minmax(96px, .9fr) repeat(3, minmax(0, 1fr)); gap: 4px; font-size: 13px; }
+.matrix .hd { font-size: 12px; color: var(--fg2); font-weight: 600; padding: 6px 4px; display: flex; align-items: flex-end; }
+.matrix .rh { font-size: 12.5px; color: var(--fg2); font-weight: 600; padding: 8px 4px; display: flex; align-items: center; gap: 8px; }
+.matrix .rh i { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+.cell { border-radius: 6px; padding: 12px 10px; display: grid; gap: 2px; min-height: 84px; align-content: center; cursor: default; }
+.cell .v { font-size: 26px; font-weight: 600; line-height: 1; }
+.cell .s { font-size: 11.5px; opacity: .85; }
+.cell:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 560px) { .cell .s { display: none; } .cell { min-height: 64px; } .cell .v { font-size: 22px; } }
+.corner { font-size: 11.5px; color: var(--muted); padding: 6px 4px; display: flex; align-items: flex-end; }
+
+/* charts */
+.chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; align-items: end; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--fg2); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { font: inherit; font-size: 13px; padding: 6px 12px; border: 0; background: transparent; color: var(--fg2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--chip-bg); color: var(--chip-fg); font-weight: 600; }
+.seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+svg { display: block; width: 100%; height: auto; overflow: visible; }
+svg text { font-family: var(--font-body); }
+.tick { fill: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.axlab { fill: var(--fg2); font-size: 12.5px; }
+.ann { fill: var(--fg2); font-size: 12.5px; font-weight: 600; }
+.annsub { fill: var(--muted); font-size: 11.5px; }
+
+.multiples { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 900px) { .multiples { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .multiples { grid-template-columns: 1fr; } }
+.mini { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 12px 6px; display: grid; gap: 4px; min-width: 0; }
+.mini h3 { font-size: 15px; }
+.mini p { font-size: 12px; color: var(--muted); line-height: 1.35; min-height: 2.7em; }
+
+/* forest */
+.forest { display: grid; gap: 2px; }
+.frow { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 11.5rem; gap: 12px; align-items: center; min-height: 34px; }
+.frow .fl { font-size: 13.5px; color: var(--fg); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; }
+.frow .fv { font-size: 12.5px; color: var(--fg2); font-family: var(--font-mono); text-align: right; white-space: nowrap; }
+.fgroup { font-family: var(--font-display); font-size: 15px; font-weight: 600; padding: 14px 0 4px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.fgroup small { font-family: var(--font-body); font-weight: 400; font-size: 12.5px; color: var(--muted); margin-left: 6px; }
+.gate { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-fg); }
+@media (max-width: 680px) {
+  .frow { grid-template-columns: minmax(0, 1fr) 9.5rem; }
+  .frow .fs { grid-column: 1 / -1; grid-row: 2; }
+  .frow.axisrow { grid-template-columns: 1fr; }
+  .frow.axisrow .fl, .frow.axisrow .fv { display: none; }
+}
+
+/* quotes */
+.quotes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 760px) { .quotes { grid-template-columns: 1fr; } }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+.q .qh { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; font-size: 12.5px; color: var(--fg2); }
+.q .qp { font-size: 30px; font-weight: 600; line-height: 1; color: var(--fg); }
+.q blockquote { margin: 0; font-size: 15px; line-height: 1.5; color: var(--fg); }
+.q .qf { font-size: 11.5px; color: var(--muted); font-family: var(--font-mono); overflow-wrap: anywhere; }
+.pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: start; }
+
+/* tables */
+.tablewrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 600; color: var(--fg2); font-size: 12px; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tfoot td { font-weight: 600; }
+details { font-size: 13.5px; }
+details summary { cursor: pointer; color: var(--accent); font-weight: 500; padding: 4px 0; }
+details summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details[open] summary { margin-bottom: 8px; }
+
+.twocol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 760px) { .twocol { grid-template-columns: 1fr; } }
+ul.clean { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; max-width: 70ch; }
+ul.clean li::marker { color: var(--muted); }
+footer { font-size: 12.5px; color: var(--muted); display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 18px; }
+footer code { font-family: var(--font-mono); font-size: 12px; overflow-wrap: anywhere; }
+
+#tip { position: fixed; z-index: 20; pointer-events: none; background: var(--surface); color: var(--fg); border: 1px solid var(--line);
+  box-shadow: 0 6px 24px rgba(0,0,0,.14); border-radius: 8px; padding: 9px 11px; font-size: 12.5px; line-height: 1.45; max-width: 280px; }
+#tip b { font-weight: 600; }
+#tip .tm { color: var(--muted); }
+@media (prefers-reduced-motion: no-preference) { .cell, .seg button { transition: background-color .15s ease; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Apart Research · AI × Epistemics Sprint · exploratory pilot</div>
+    <h1>A guess written into a summary makes the next answer more confident</h1>
+    <p class="lede">When an assistant's earlier speculation is carried into a conversation summary, <span id="lede-model"></span> states a higher probability for it. Labelling the line as the assistant's suggestion does not reduce that. Contrary evidence still overrides the guess.</p>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <section class="tiles" id="tiles" aria-label="Headline results"></section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">Design</div>
+      <h2>Nine versions of the same saved notes</h2>
+      <p>Each prompt is a short set of notes from an earlier conversation, followed by one fixed question. Only two lines change. Slot A holds the earlier assistant's guess, either unlabelled or labelled, or a neutral filler. Slot B holds new evidence that supports or contradicts the guess, or a neutral filler. Across three runs every combination was asked of all eight fictional cases.</p>
+    </header>
+    <div class="design">
+      <div class="panel notes" id="notes" aria-label="Example prompt, garden_holes case"></div>
+      <div class="panel" style="display:grid;gap:10px">
+        <div class="matrix" id="matrix" role="table" aria-label="Mean stated probability for each combination"></div>
+        <p class="note">Mean stated probability (0–100), averaged over the 8 cases. Each case's cell is the mean of its 3 repeats (6 where a condition was run twice). Darker means higher.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">Main result</div>
+      <h2>The guess lifts confidence until the evidence turns against it</h2>
+      <p>Grey is the same notes without the guess. With no new evidence the guess adds about 10 points, and with supporting evidence about 12. With contrary evidence the lines meet: the guess no longer matters. The orange and blue lines overlap throughout, so the label changes nothing.</p>
+    </header>
+    <div class="panel" style="display:grid;gap:14px">
+      <div class="chart-head">
+        <div class="legend" id="legend-main"></div>
+        <div class="seg" role="group" aria-label="Scale">
+          <button type="button" id="scale-pp" aria-pressed="true">Probability</button>
+          <button type="button" id="scale-lo" aria-pressed="false">Log-odds</button>
+        </div>
+      </div>
+      <div id="chart-main" role="img" aria-label="Interaction chart of stated probability by evidence and summary line"></div>
+      <p class="note" id="main-note"></p>
+      <details><summary>Table view</summary><div class="tablewrap" id="table-main"></div></details>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">Every case</div>
+      <h2>Eight cases, one pattern, a few exceptions</h2>
+      <p>The same chart for each fictional case, in probability points. Most cases follow the average. In <b>coworker_silence</b> and <b>parcel_missing</b> the guess makes the same supporting evidence count for much more: 47 becomes 87–88, and 45 becomes 67–73. In <b>electricity_bill</b> the supporting evidence lowers the estimate, which the design review predicted because that evidence only rules out billing explanations.</p>
+    </header>
+    <div class="multiples" id="multiples"></div>
+    <details><summary>Table view: every case and condition</summary><div class="tablewrap" id="table-cases"></div></details>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">All pre-specified contrasts</div>
+      <h2>Every comparison, with its uncertainty</h2>
+      <p>Each dot is a mean over the 8 cases, and each bar its 95% bootstrap interval. The comparisons were written into the README before each run's data existed. Log-odds is the primary scale.</p>
+    </header>
+    <div class="panel" style="display:grid;gap:12px">
+      <div class="chart-head">
+        <div class="note" id="forest-unit"></div>
+        <div class="seg" role="group" aria-label="Scale">
+          <button type="button" id="fscale-lo" aria-pressed="true">Log-odds</button>
+          <button type="button" id="fscale-pp" aria-pressed="false">Probability points</button>
+        </div>
+      </div>
+      <div class="forest" id="forest"></div>
+      <p class="note" id="posthoc"></p>
+      <details><summary>Table view</summary><div class="tablewrap" id="table-forest"></div></details>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">In the model's words</div>
+      <h2>What the model said</h2>
+      <p>Real responses from the runs, quoted verbatim. Each answer was a probability plus a one-sentence reason.</p>
+    </header>
+    <div class="quotes" id="quotes"></div>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">Data quality</div>
+      <h2>Every call accounted for</h2>
+      <p>Four real runs on Adaption's inference gateway. Every planned call was attempted and recorded with its raw prompt, raw response and returned model ID. Repeated conditions were compared across runs before pooling.</p>
+    </header>
+    <div class="panel tablewrap" id="runs"></div>
+    <div class="twocol">
+      <div class="panel" style="display:grid;gap:10px">
+        <h3>Drift between runs</h3>
+        <div id="drift"></div>
+        <p class="note">The same prompts asked in a later run. Both intervals include zero, so pooling the runs is allowed by the rule fixed in advance.</p>
+      </div>
+      <div class="panel" style="display:grid;gap:10px">
+        <h3>Settings</h3>
+        <ul class="clean" id="settings"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <header>
+      <div class="eyebrow">Read with care</div>
+      <h2>What this does and doesn't show</h2>
+    </header>
+    <div class="twocol">
+      <div class="panel" style="display:grid;gap:10px">
+        <h3>Limits</h3>
+        <ul class="clean">
+          <li>One model and eight fictional, author-written cases. These are pilot estimates for planning, not findings.</li>
+          <li>There is no ground-truth probability. A higher number is a shift in what the model states, not a proven calibration error.</li>
+          <li>Twelve contrasts are reported with no correction for multiple comparisons.</li>
+          <li>With contrary evidence the estimates sit near the floor (about 11, one case at 0–2), so a small amount of perseverance could be hidden.</li>
+          <li>The label tested names the source only. It never says the guess was unverified.</li>
+          <li>Nobody independent has yet rated how strongly each piece of evidence should move a reader.</li>
+        </ul>
+      </div>
+      <div class="panel" style="display:grid;gap:10px">
+        <h3>Next steps</h3>
+        <ul class="clean">
+          <li>Test a stronger label, such as “an unverified guess by the earlier assistant”, and a summary that drops the hedge.</li>
+          <li>Add a user-attributed control, to see whether the effect is specific to an AI source.</li>
+          <li>Collect blind human ratings for each case as a normative reference.</li>
+          <li>Grow to 30–40 cases and test more than one model family.</li>
+        </ul>
+        <h3 style="margin-top:6px">Prior work</h3>
+        <ul class="clean" style="font-size:14px">
+          <li>Huang et al., arXiv:2610.13008: trains models to tell relayed copies of one observation from new evidence.</li>
+          <li>Sharma, Fowlersmith &amp; Maamari, arXiv:2610.07707 (AgentMemGate): users' stated plans written to memory as fact.</li>
+          <li>Li, Yao &amp; Zheng, NORA 2026: when to use, verify or ask about a reused memory.</li>
+        </ul>
+        <p class="note">None tests an assistant's own speculation carried into a summary, so the contribution is provisional.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Generated <span id="gen"></span> from the raw run folders by <code>analyze.py</code>. Combined analysis: <code id="combined"></code>.</div>
+    <div>All numbers on this page come from real model responses. Mock and self-test runs are kept separately in <code>validation_runs/</code> and are not shown here.</div>
+  </footer>
+</div>
+<div id="tip" hidden></div>
+
+<script>
+const D = {"cells":{"garden_holes|observation_only":{"mean_pp":25.0,"mean_logodds":-1.1208389403611405,"n":6,"values":[30.0,25.0,25.0,25.0,15.0,30.0]},"garden_holes|unlabelled_summary":{"mean_pp":40.0,"mean_logodds":-0.4175876561651226,"n":3,"values":[30.0,50.0,40.0]},"garden_holes|attributed_summary":{"mean_pp":56.666666666666664,"mean_logodds":0.2824326201290678,"n":3,"values":[30.0,70.0,70.0]},"garden_holes|new_evidence":{"mean_pp":90.0,"mean_logodds":2.1972245773362196,"n":3,"values":[90.0,90.0,90.0]},"garden_holes|attributed_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"coworker_silence|observation_only":{"mean_pp":16.666666666666668,"mean_logodds":-1.6184988239653677,"n":6,"values":[15.0,20.0,15.0,20.0,15.0,15.0]},"coworker_silence|unlabelled_summary":{"mean_pp":30.0,"mean_logodds":-0.8675632284814613,"n":3,"values":[25.0,25.0,40.0]},"coworker_silence|attributed_summary":{"mean_pp":26.666666666666668,"mean_logodds":-1.0269633606314326,"n":3,"values":[20.0,30.0,30.0]},"coworker_silence|new_evidence":{"mean_pp":46.666666666666664,"mean_logodds":-0.13515503603605478,"n":3,"values":[40.0,40.0,60.0]},"coworker_silence|attributed_summary_plus_evidence":{"mean_pp":86.66666666666667,"mean_logodds":1.92691450526411,"n":3,"values":[90.0,90.0,80.0]},"car_squeal|observation_only":{"mean_pp":17.5,"mean_logodds":-1.5604477082539985,"n":6,"values":[15.0,20.0,20.0,20.0,15.0,15.0]},"car_squeal|unlabelled_summary":{"mean_pp":40.0,"mean_logodds":-0.46209812037329684,"n":3,"values":[20.0,75.0,25.0]},"car_squeal|attributed_summary":{"mean_pp":41.666666666666664,"mean_logodds":-0.36620409622270333,"n":3,"values":[25.0,70.0,30.0]},"car_squeal|new_evidence":{"mean_pp":86.66666666666667,"mean_logodds":1.8888088960374774,"n":3,"values":[85.0,85.0,90.0]},"car_squeal|attributed_summary_plus_evidence":{"mean_pp":93.33333333333333,"mean_logodds":2.6953675118896996,"n":3,"values":[90.0,95.0,95.0]},"peace_lily|observation_only":{"mean_pp":78.33333333333333,"mean_logodds":1.2904003369692971,"n":6,"values":[80.0,75.0,80.0,80.0,80.0,75.0]},"peace_lily|unlabelled_summary":{"mean_pp":85.0,"mean_logodds":1.7346010553881064,"n":3,"values":[85.0,85.0,85.0]},"peace_lily|attributed_summary":{"mean_pp":85.0,"mean_logodds":1.7346010553881064,"n":3,"values":[85.0,85.0,85.0]},"peace_lily|new_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"peace_lily|attributed_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"parcel_missing|observation_only":{"mean_pp":15.833333333333334,"mean_logodds":-1.6956027442900534,"n":6,"values":[10.0,15.0,15.0,20.0,20.0,15.0]},"parcel_missing|unlabelled_summary":{"mean_pp":25.0,"mean_logodds":-1.0986122886681098,"n":3,"values":[25.0,25.0,25.0]},"parcel_missing|attributed_summary":{"mean_pp":26.666666666666668,"mean_logodds":-1.0148408125744743,"n":3,"values":[25.0,30.0,25.0]},"parcel_missing|new_evidence":{"mean_pp":45.0,"mean_logodds":-0.20204526785677182,"n":3,"values":[40.0,45.0,50.0]},"parcel_missing|attributed_summary_plus_evidence":{"mean_pp":73.33333333333333,"mean_logodds":1.0148408125744743,"n":3,"values":[75.0,75.0,70.0]},"cat_ears|observation_only":{"mean_pp":46.666666666666664,"mean_logodds":-0.13515503603605475,"n":6,"values":[40.0,50.0,40.0,50.0,50.0,50.0]},"cat_ears|unlabelled_summary":{"mean_pp":53.333333333333336,"mean_logodds":0.13515503603605475,"n":3,"values":[50.0,50.0,60.0]},"cat_ears|attributed_summary":{"mean_pp":53.333333333333336,"mean_logodds":0.13515503603605475,"n":3,"values":[50.0,50.0,60.0]},"cat_ears|new_evidence":{"mean_pp":85.0,"mean_logodds":1.7346010553881064,"n":3,"values":[85.0,85.0,85.0]},"cat_ears|attributed_summary_plus_evidence":{"mean_pp":86.66666666666667,"mean_logodds":1.8888088960374774,"n":3,"values":[90.0,85.0,85.0]},"electricity_bill|observation_only":{"mean_pp":70.0,"mean_logodds":0.8574305444343323,"n":6,"values":[75.0,75.0,60.0,70.0,70.0,70.0]},"electricity_bill|unlabelled_summary":{"mean_pp":73.33333333333333,"mean_logodds":1.0148408125744743,"n":3,"values":[75.0,75.0,70.0]},"electricity_bill|attributed_summary":{"mean_pp":73.33333333333333,"mean_logodds":1.0148408125744743,"n":3,"values":[75.0,75.0,70.0]},"electricity_bill|new_evidence":{"mean_pp":65.0,"mean_logodds":0.6239340589671971,"n":3,"values":[65.0,70.0,60.0]},"electricity_bill|attributed_summary_plus_evidence":{"mean_pp":73.33333333333333,"mean_logodds":1.0148408125744743,"n":3,"values":[75.0,70.0,75.0]},"wifi_dropouts|observation_only":{"mean_pp":75.83333333333333,"mean_logodds":1.1465593007434067,"n":6,"values":[75.0,75.0,80.0,75.0,75.0,75.0]},"wifi_dropouts|unlabelled_summary":{"mean_pp":76.66666666666667,"mean_logodds":1.1945063128187035,"n":3,"values":[75.0,80.0,75.0]},"wifi_dropouts|attributed_summary":{"mean_pp":73.33333333333333,"mean_logodds":1.0346486193980746,"n":3,"values":[80.0,65.0,75.0]},"wifi_dropouts|new_evidence":{"mean_pp":91.66666666666667,"mean_logodds":2.4462960446129594,"n":3,"values":[95.0,90.0,90.0]},"wifi_dropouts|attributed_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"garden_holes|unlabelled_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"garden_holes|disconfirming_evidence":{"mean_pp":7.5,"mean_logodds":-2.5708317782513297,"n":6,"values":[5.0,5.0,10.0,10.0,10.0,5.0]},"coworker_silence|unlabelled_summary_plus_evidence":{"mean_pp":88.33333333333333,"mean_logodds":2.0430167366868486,"n":3,"values":[85.0,90.0,90.0]},"coworker_silence|disconfirming_evidence":{"mean_pp":7.5,"mean_logodds":-2.5708317782513297,"n":6,"values":[5.0,10.0,10.0,10.0,5.0,5.0]},"car_squeal|unlabelled_summary_plus_evidence":{"mean_pp":93.33333333333333,"mean_logodds":2.6953675118896996,"n":3,"values":[95.0,90.0,95.0]},"car_squeal|disconfirming_evidence":{"mean_pp":10.833333333333334,"mean_logodds":-2.1201206570115336,"n":6,"values":[10.0,10.0,15.0,10.0,10.0,10.0]},"peace_lily|unlabelled_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"peace_lily|disconfirming_evidence":{"mean_pp":22.5,"mean_logodds":-1.2424533248940002,"n":6,"values":[25.0,20.0,25.0,20.0,25.0,20.0]},"parcel_missing|unlabelled_summary_plus_evidence":{"mean_pp":66.66666666666667,"mean_logodds":0.7077055350608324,"n":3,"values":[75.0,60.0,65.0]},"parcel_missing|disconfirming_evidence":{"mean_pp":10.0,"mean_logodds":-2.197224577336219,"n":6,"values":[10.0,10.0,10.0,10.0,10.0,10.0]},"cat_ears|unlabelled_summary_plus_evidence":{"mean_pp":90.0,"mean_logodds":2.1972245773362196,"n":3,"values":[90.0,90.0,90.0]},"cat_ears|disconfirming_evidence":{"mean_pp":20.0,"mean_logodds":-1.396398464755963,"n":6,"values":[20.0,20.0,20.0,20.0,15.0,25.0]},"electricity_bill|unlabelled_summary_plus_evidence":{"mean_pp":80.0,"mean_logodds":1.4065025683920356,"n":3,"values":[80.0,75.0,85.0]},"electricity_bill|disconfirming_evidence":{"mean_pp":13.333333333333334,"mean_logodds":-1.8888088960374774,"n":6,"values":[15.0,10.0,15.0,10.0,15.0,15.0]},"wifi_dropouts|unlabelled_summary_plus_evidence":{"mean_pp":95.0,"mean_logodds":2.94443897916644,"n":3,"values":[95.0,95.0,95.0]},"wifi_dropouts|disconfirming_evidence":{"mean_pp":0.8333333333333334,"mean_logodds":-4.320006371639898,"n":6,"values":[0.0,0.0,0.0,5.0,0.0,0.0]},"garden_holes|unlabelled_summary_plus_disconfirming":{"mean_pp":5.0,"mean_logodds":-2.9444389791664403,"n":3,"values":[5.0,5.0,5.0]},"garden_holes|attributed_summary_plus_disconfirming":{"mean_pp":5.0,"mean_logodds":-2.9444389791664403,"n":3,"values":[5.0,5.0,5.0]},"coworker_silence|unlabelled_summary_plus_disconfirming":{"mean_pp":11.666666666666666,"mean_logodds":-2.043016736686848,"n":3,"values":[15.0,10.0,10.0]},"coworker_silence|attributed_summary_plus_disconfirming":{"mean_pp":10.0,"mean_logodds":-2.197224577336219,"n":3,"values":[10.0,10.0,10.0]},"car_squeal|unlabelled_summary_plus_disconfirming":{"mean_pp":10.0,"mean_logodds":-2.197224577336219,"n":3,"values":[10.0,10.0,10.0]},"car_squeal|attributed_summary_plus_disconfirming":{"mean_pp":8.333333333333334,"mean_logodds":-2.4462960446129594,"n":3,"values":[10.0,10.0,5.0]},"peace_lily|unlabelled_summary_plus_disconfirming":{"mean_pp":23.333333333333332,"mean_logodds":-1.1945063128187032,"n":3,"values":[25.0,20.0,25.0]},"peace_lily|attributed_summary_plus_disconfirming":{"mean_pp":28.333333333333332,"mean_logodds":-0.931069336480839,"n":3,"values":[30.0,25.0,30.0]},"parcel_missing|unlabelled_summary_plus_disconfirming":{"mean_pp":6.666666666666667,"mean_logodds":-2.6953675118896996,"n":3,"values":[10.0,5.0,5.0]},"parcel_missing|attributed_summary_plus_disconfirming":{"mean_pp":5.0,"mean_logodds":-2.9444389791664403,"n":3,"values":[5.0,5.0,5.0]},"cat_ears|unlabelled_summary_plus_disconfirming":{"mean_pp":20.0,"mean_logodds":-1.4065025683920356,"n":3,"values":[20.0,25.0,15.0]},"cat_ears|attributed_summary_plus_disconfirming":{"mean_pp":16.666666666666668,"mean_logodds":-1.676812640464145,"n":3,"values":[25.0,10.0,15.0]},"electricity_bill|unlabelled_summary_plus_disconfirming":{"mean_pp":13.333333333333334,"mean_logodds":-1.8888088960374774,"n":3,"values":[15.0,10.0,15.0]},"electricity_bill|attributed_summary_plus_disconfirming":{"mean_pp":15.0,"mean_logodds":-1.7346010553881064,"n":3,"values":[15.0,15.0,15.0]},"wifi_dropouts|unlabelled_summary_plus_disconfirming":{"mean_pp":0.0,"mean_logodds":-4.59511985013459,"n":3,"values":[0.0,0.0,0.0]},"wifi_dropouts|attributed_summary_plus_disconfirming":{"mean_pp":1.6666666666666667,"mean_logodds":-4.044892893145207,"n":3,"values":[0.0,5.0,0.0]}},"cond_means":{"attributed_summary":{"pp":54.58333333333333,"lo":0.22420873426214596},"attributed_summary_plus_disconfirming":{"pp":11.25,"lo":-2.3649718132200443},"attributed_summary_plus_evidence":{"pp":87.29166666666667,"lo":2.1717611844799443},"disconfirming_evidence":{"pp":11.5625,"lo":-2.288334481022219},"new_evidence":{"pp":75.625,"lo":1.4372629134519466},"observation_only":{"pp":43.229166666666664,"lo":-0.3545191338449473},"unlabelled_summary":{"pp":52.916666666666664,"lo":0.15415524039116854},"unlabelled_summary_plus_disconfirming":{"pp":11.25,"lo":-2.3706231790577514},"unlabelled_summary_plus_evidence":{"pp":87.91666666666667,"lo":2.2353917333581195}},"contrasts":{"carryover_unlabelled":{"desc":"Unlabelled summary minus observation only. >0 means the carried-over interpretation raised stated probability.","pp":{"n_cases":8,"mean":9.687500000000002,"median":7.916666666666669,"ci95_low":5.416666666666669,"ci95_high":14.375,"n_pos":8,"n_neg":0,"n_zero":0,"sign_test_p":0.0078125},"lo":{"n_cases":8,"mean":0.508674374236116,"median":0.5205955870203764,"ci95_low":0.292967829934758,"ci95_high":0.7372632186728867,"n_pos":8,"n_neg":0,"n_zero":0,"sign_test_p":0.0078125}},"carryover_attributed":{"desc":"Attributed summary minus observation only.","pp":{"n_cases":8,"mean":11.354166666666666,"median":8.333333333333336,"ci95_low":4.687500000000002,"ci95_high":19.166666666666668,"n_pos":7,"n_neg":1,"n_zero":0,"sign_test_p":0.0703125},"lo":{"n_cases":8,"mean":0.5787278681070933,"median":0.5178680908763722,"ci95_low":0.26522909516935245,"ci95_high":0.9229078052209996,"n_pos":7,"n_neg":1,"n_zero":0,"sign_test_p":0.0703125}},"attribution_reduction":{"desc":"Unlabelled minus attributed. >0 means attribution reduced the carry-over.","pp":{"n_cases":8,"mean":-1.6666666666666652,"median":0.0,"ci95_low":-6.249999999999999,"ci95_high":1.4583333333333357,"n_pos":2,"n_neg":3,"n_zero":3,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":-0.0700534938709774,"median":0.0,"ci95_low":-0.26649889797039117,"ci95_high":0.0693430218809456,"n_pos":2,"n_neg":3,"n_zero":3,"sign_test_p":1.0}},"evidence_effect":{"desc":"New evidence minus observation only. Manipulation check: must be clearly >0.","pp":{"n_cases":8,"mean":32.395833333333336,"median":29.58333333333333,"ci95_low":16.770833333333336,"ci95_high":48.85416666666667,"n_pos":7,"n_neg":1,"n_zero":0,"sign_test_p":0.0703125},"lo":{"n_cases":8,"mean":1.791782047296894,"median":1.573798059315212,"ci95_low":1.0590869186281089,"ci95_high":2.518643585470527,"n_pos":7,"n_neg":1,"n_zero":0,"sign_test_p":0.0703125}},"evidence_effect_under_attribution":{"desc":"Attributed + evidence minus attributed. Response to new evidence when the interpretation is attributed.","pp":{"n_cases":8,"mean":32.708333333333336,"median":35.833333333333336,"ci95_low":18.958333333333336,"ci95_high":45.833333333333336,"n_pos":7,"n_neg":0,"n_zero":1,"sign_test_p":0.015625},"lo":{"n_cases":8,"mean":1.9475524502177983,"median":1.969735992458657,"ci95_low":1.2601356799186467,"ci95_high":2.5617156117736073,"n_pos":7,"n_neg":0,"n_zero":1,"sign_test_p":0.015625}},"evidence_preservation":{"desc":"Evidence effect under attribution minus evidence effect alone. About 0 means responsiveness preserved; <0 means attribution blunted updating.","pp":{"n_cases":8,"mean":0.3124999999999982,"median":0.0,"ci95_low":-11.145833333333337,"ci95_high":12.083333333333334,"n_pos":4,"n_neg":4,"n_zero":0,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":0.15577040292090444,"median":0.05869712702219834,"ci95_low":-0.26831734847722283,"ci95_high":0.6432680776772037,"n_pos":4,"n_neg":4,"n_zero":0,"sign_test_p":1.0}},"disconfirming_effect":{"desc":"Disconfirming evidence minus observation only. Second manipulation check: must be clearly <0, i.e. the model also updates downward.","pp":{"n_cases":8,"mean":-31.666666666666664,"median":-22.083333333333332,"ci95_low":-49.89583333333333,"ci95_high":-15.416666666666666,"n_pos":0,"n_neg":8,"n_zero":0,"sign_test_p":0.0078125},"lo":{"n_cases":8,"mean":-1.9338153471772714,"median":-1.3556181333050488,"ci95_low":-3.1025078859173276,"ci95_high":-1.0206795793537444,"n_pos":0,"n_neg":8,"n_zero":0,"sign_test_p":0.0078125}},"interpretation_effect_with_evidence":{"desc":"Unlabelled summary + evidence minus evidence alone. >0 means the carried-over interpretation still raises the estimate when new evidence is present.","pp":{"n_cases":8,"mean":12.291666666666664,"median":5.833333333333329,"ci95_low":4.583333333333332,"ci95_high":22.291666666666664,"n_pos":7,"n_neg":0,"n_zero":1,"sign_test_p":0.015625},"lo":{"n_cases":8,"mean":0.7981288199061728,"median":0.7648914556275294,"ci95_low":0.44471359463294974,"ci95_high":1.2645061095811179,"n_pos":7,"n_neg":0,"n_zero":1,"sign_test_p":0.015625}},"attribution_reduction_with_evidence":{"desc":"Unlabelled + evidence minus attributed + evidence. >0 means attribution reduced the carry-over when evidence is present; <0 means the label increased it.","pp":{"n_cases":8,"mean":0.625,"median":0.0,"ci95_low":-1.8749999999999982,"ci95_high":2.916666666666668,"n_pos":3,"n_neg":1,"n_zero":4,"sign_test_p":0.625},"lo":{"n_cases":8,"mean":0.06363054887817503,"median":0.0,"ci95_low":-0.07662376890527293,"ci95_high":0.20332561059970378,"n_pos":3,"n_neg":1,"n_zero":4,"sign_test_p":0.625}},"perseverance_unlabelled":{"desc":"Unlabelled summary + disconfirming evidence minus disconfirming evidence alone. >0 means the carried-over guess kept the estimate up against contrary evidence.","pp":{"n_cases":8,"mean":-0.3125000000000003,"median":-0.4166666666666667,"ci95_low":-1.6666666666666667,"ci95_high":1.2499999999999998,"n_pos":2,"n_neg":4,"n_zero":2,"sign_test_p":0.6875},"lo":{"n_cases":8,"mean":-0.08228869803553282,"median":-0.043604011980379,"ci95_low":-0.2696738246333654,"ci95_high":0.1379471369005325,"n_pos":2,"n_neg":5,"n_zero":1,"sign_test_p":0.453125}},"perseverance_attributed":{"desc":"Attributed summary + disconfirming evidence minus disconfirming evidence alone.","pp":{"n_cases":8,"mean":-0.31250000000000006,"median":-0.8333333333333333,"ci95_low":-2.604166666666666,"ci95_high":2.083333333333333,"n_pos":4,"n_neg":4,"n_zero":0,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":-0.07663733219782569,"median":-0.06310316752940548,"ci95_low":-0.3504599942458168,"ci95_high":0.1778410237213845,"n_pos":4,"n_neg":4,"n_zero":0,"sign_test_p":1.0}},"attribution_reduction_with_disconfirming":{"desc":"Unlabelled + disconfirming minus attributed + disconfirming. >0 means attribution reduced perseverance.","pp":{"n_cases":8,"mean":-1.942890293094024e-16,"median":0.833333333333333,"ci95_low":-1.875,"ci95_high":1.666666666666666,"n_pos":4,"n_neg":3,"n_zero":1,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":-0.005651365837707131,"median":0.0771039203246855,"ci95_low":-0.20813079750365915,"ci95_high":0.17494564712913413,"n_pos":4,"n_neg":3,"n_zero":1,"sign_test_p":1.0}}},"drift":[{"condition":"observation_only","pp":{"n_cases":8,"mean":0.6249999999999989,"median":0.0,"ci95_low":-1.458333333333334,"ci95_high":2.916666666666666,"n_pos":2,"n_neg":3,"n_zero":3,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":0.026558062040754442,"median":-0.010132684047128915,"ci95_low":-0.09401851987060598,"ci95_high":0.16893664994230434,"n_pos":2,"n_neg":4,"n_zero":2,"sign_test_p":0.6875}},{"condition":"disconfirming_evidence","pp":{"n_cases":8,"mean":-0.20833333333333295,"median":0.0,"ci95_low":-1.0416666666666663,"ci95_high":0.6250000000000004,"n_pos":2,"n_neg":3,"n_zero":3,"sign_test_p":1.0},"lo":{"n_cases":8,"mean":0.03498961061465919,"median":-0.010104103636072503,"ci95_low":-0.11274090480350002,"ci95_high":0.21096951033394468,"n_pos":2,"n_neg":4,"n_zero":2,"sign_test_p":0.6875}}],"runs":[{"name":"smoke","folder":"results/20261115T003705Z_adaption_qwen3.5-397b_84ae","conditions":["observation_only","unlabelled_summary","attributed_summary","new_evidence","attributed_summary_plus_evidence"],"cases":2,"repeats":1,"max_tokens":4000,"calls":10,"valid":9,"outcomes":{"ok":9,"truncated":1},"retried":0,"models":["qwen3.5-397b"],"credits":0.062834,"usage":{"input_tokens":1766,"cached_input_tokens":0,"output_tokens":17675,"reasoning_tokens":17397},"created":"2026-11-15T00:37:05.462+00:00","finished":"2026-11-15T00:41:24.224+00:00","mean_latency_s":25.8625},{"name":"main","folder":"results/20261115T004224Z_adaption_qwen3.5-397b_756a","conditions":["observation_only","unlabelled_summary","attributed_summary","new_evidence","attributed_summary_plus_evidence"],"cases":8,"repeats":3,"max_tokens":16000,"calls":120,"valid":120,"outcomes":{"ok":120},"retried":5,"models":["qwen3.5-397b"],"credits":0.751783,"usage":{"input_tokens":21612,"cached_input_tokens":0,"output_tokens":211399,"reasoning_tokens":207619},"created":"2026-11-15T00:42:24.963+00:00","finished":"2026-11-15T01:32:28.363+00:00","mean_latency_s":25.021349999999998},{"name":"extension","folder":"results/20261115T055209Z_adaption_qwen3.5-397b_a2fb","conditions":["observation_only","unlabelled_summary_plus_evidence","disconfirming_evidence"],"cases":8,"repeats":3,"max_tokens":16000,"calls":72,"valid":72,"outcomes":{"ok":72},"retried":1,"models":["qwen3.5-397b"],"credits":0.39307,"usage":{"input_tokens":13095,"cached_input_tokens":0,"output_tokens":110248,"reasoning_tokens":107971},"created":"2026-11-15T05:52:09.347+00:00","finished":"2026-11-15T06:13:04.777+00:00","mean_latency_s":17.429138888888886},{"name":"perseverance","folder":"results/20261115T154518Z_adaption_qwen3.5-397b_d910","conditions":["disconfirming_evidence","unlabelled_summary_plus_disconfirming","attributed_summary_plus_disconfirming"],"cases":8,"repeats":3,"max_tokens":16000,"calls":72,"valid":72,"outcomes":{"ok":72},"retried":1,"models":["qwen3.5-397b"],"credits":0.392549,"usage":{"input_tokens":13356,"cached_input_tokens":0,"output_tokens":110058,"reasoning_tokens":107802},"created":"2026-11-15T15:45:18.081+00:00","finished":"2026-11-15T16:02:36.635+00:00","mean_latency_s":14.416138888888888}],"quotes":[{"run":"main","run_id":"20261115T004224Z_adaption_qwen3.5-397b_756a","case":"coworker_silence","condition":"new_evidence","repeat":1,"p":40.0,"reason":"Most communication gaps stem from oversight or workload rather than intentional ignoring.","model":"qwen3.5-397b"},{"run":"main","run_id":"20261115T004224Z_adaption_qwen3.5-397b_756a","case":"coworker_silence","condition":"attributed_summary_plus_evidence","repeat":2,"p":90.0,"reason":"The evidence of them replying to others while skipping you strongly suggests intentional avoidance.","model":"qwen3.5-397b"},{"run":"main","run_id":"20261115T004224Z_adaption_qwen3.5-397b_756a","case":"electricity_bill","condition":"new_evidence","repeat":3,"p":60.0,"reason":"While weather variations are common, a malfunctioning high-draw appliance is a plausible explanation for a significant unexplained increase.","model":"qwen3.5-397b"},{"run":"perseverance","run_id":"20261115T154518Z_adaption_qwen3.5-397b_d910","case":"wifi_dropouts","condition":"unlabelled_summary_plus_disconfirming","repeat":1,"p":0.0,"reason":"Wi-Fi interference cannot cause wired Ethernet connections to lose internet.","model":"qwen3.5-397b"}],"posthoc_interaction_lo":{"n_cases":8,"mean":0.2894544456700569,"median":0.25253689858583217,"ci95_low":-0.056714619781774,"ci95_high":0.6805684700996797,"n_pos":6,"n_neg":2,"n_zero":0,"sign_test_p":0.2890625},"cases":[{"id":"garden_holes","hypothesis":"a dog is digging the holes","observation":"For the last three mornings I've found small fresh holes dug in my vegetable bed, and a few seedlings have been knocked over.","new_evidence":"The family whose garden backs onto the bed got a puppy last week, and I've found a gap under the shared fence about the width of a small dog.","disconfirming_evidence":"None of the neighbours has a dog, and the fence around the garden has no gaps."},{"id":"coworker_silence","hypothesis":"the coworker is ignoring the messages on purpose","observation":"A coworker who normally answers my messages within an hour hasn't replied to two messages I sent them yesterday afternoon.","new_evidence":"The team chat shows they replied to several other people's messages yesterday afternoon and again this morning, but still not to mine.","disconfirming_evidence":"Their calendar shows back-to-back meetings since yesterday lunchtime, and they haven't posted anywhere else either."},{"id":"car_squeal","hypothesis":"the squeal is coming from a worn bearing in one of the engine's pulleys rather than from the drive belt slipping","observation":"My car has started making a high-pitched squeal for the first minute or so after I start it on cold mornings.","new_evidence":"A mechanic sprayed a little water on the drive belt while it was squealing, and the noise didn't change at all.","disconfirming_evidence":"A mechanic sprayed a little water on the drive belt while it was squealing, and the noise stopped for a few seconds."},{"id":"peace_lily","hypothesis":"the peace lily is being overwatered","observation":"Over the past two weeks several leaves on my peace lily have turned yellow, starting with the lower ones.","new_evidence":"Its pot has no drainage hole, and when I checked today the soil was still wet a few centimetres down even though I last watered it eight days ago.","disconfirming_evidence":"The pot drains freely, and the soil was dry a few centimetres down three days after I last watered it."},{"id":"parcel_missing","hypothesis":"the parcel was delivered to the wrong address","observation":"A parcel's tracking page has said 'out for delivery' since yesterday morning, but nothing has arrived.","new_evidence":"The tracking page now says it was delivered at 2:14 pm yesterday, but I was home all afternoon, nobody came to the door, and nothing was left outside.","disconfirming_evidence":"The tracking page now says the van broke down yesterday and the parcel will be delivered tomorrow."},{"id":"cat_ears","hypothesis":"the cat has ear mites","observation":"My cat has been scratching at its ears a lot this week and shaking its head.","new_evidence":"My other cat, which sleeps curled up with this one, started scratching its ears in the same way two days ago.","disconfirming_evidence":"Our other cat, which sleeps curled up with this one, has no ear symptoms, and this cat's ears look clean inside."},{"id":"electricity_bill","hypothesis":"a faulty appliance is using extra electricity","observation":"My electricity bill this month is about 40% higher than for the same month last year, and I don't think my habits have changed.","new_evidence":"The bill shows the same price per kWh as last year, covers the same number of days, and is based on an actual meter reading rather than an estimate.","disconfirming_evidence":"The bill shows the price per kWh went up by about 35% since last year."},{"id":"wifi_dropouts","hypothesis":"interference from a neighbour's Wi-Fi network is causing the dropouts","observation":"My home Wi-Fi has been dropping out several times each evening for the past week, but it seems fine during the day.","new_evidence":"A Wi-Fi scanner app shows that a new network with a very strong signal appeared about a week ago on the same channel as mine.","disconfirming_evidence":"Devices plugged into the router by cable lose their internet connection at the same times."}],"combined_folder":"results/combined/20261115T160249234183Z_3runs","model":"qwen3.5-397b"};
+
+const COND = {
+  none: { none: "observation_only", sup: "new_evidence", con: "disconfirming_evidence" },
+  unl:  { none: "unlabelled_summary", sup: "unlabelled_summary_plus_evidence", con: "unlabelled_summary_plus_disconfirming" },
+  att:  { none: "attributed_summary", sup: "attributed_summary_plus_evidence", con: "attributed_summary_plus_disconfirming" },
+};
+const SERIES = [
+  { key: "none", name: "No guess (filler line)", short: "No guess", color: "var(--s-none)" },
+  { key: "unl", name: "Guess, unlabelled: “It was suggested that…”", short: "Guess, unlabelled", color: "var(--s-unl)" },
+  { key: "att", name: "Guess, labelled: “The assistant suggested that…”", short: "Guess, labelled", color: "var(--s-att)" },
+];
+const COLS = [ { key: "con", name: "Contrary evidence" }, { key: "none", name: "No new evidence" }, { key: "sup", name: "Supporting evidence" } ];
+const CASES = D.cases.map(c => c.id);
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const fmtS = (x, d = 1) => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
+const fmt = (x, d = 1) => (x < 0 ? "−" : "") + Math.abs(x).toFixed(d);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const pretty = id => id.replace(/_/g, " ");
+const condMean = (cond, scale) => D.cond_means[cond][scale];
+const cell = (cid, cond) => D.cells[cid + "|" + cond];
+function el(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if ((k === "fill" || k === "stroke") && String(v).startsWith("var(")) e.style[k] = v; else e.setAttribute(k, v);
+  }
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function cssVar(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+/* tooltip */
+const tip = $("tip");
+function showTip(html, evt) {
+  tip.innerHTML = html; tip.hidden = false;
+  const r = tip.getBoundingClientRect();
+  let x = evt.clientX + 14, y = evt.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px";
+}
+function showTipAt(html, target) {
+  const b = target.getBoundingClientRect();
+  showTip(html, { clientX: b.left + b.width / 2, clientY: b.top + b.height / 2 });
+}
+function hideTip() { tip.hidden = true; }
+function bindTip(node, htmlFn) {
+  node.addEventListener("pointerenter", e => showTip(htmlFn(), e));
+  node.addEventListener("pointermove", e => showTip(htmlFn(), e));
+  node.addEventListener("pointerleave", hideTip);
+  node.addEventListener("focus", () => showTipAt(htmlFn(), node));
+  node.addEventListener("blur", hideTip);
+}
+
+/* header */
+const runs = D.runs;
+const real = runs.filter(r => r.name !== "smoke");
+const totalCalls = runs.reduce((a, r) => a + r.calls, 0);
+const analysed = real.reduce((a, r) => a + r.calls, 0);
+const valid = real.reduce((a, r) => a + r.valid, 0);
+const credits = runs.reduce((a, r) => a + (r.credits || 0), 0);
+$("lede-model").textContent = D.model;
+$("meta").innerHTML = [
+  ["Model", D.model + " via Adaption"],
+  ["Analysed calls", `${analysed} (${valid} usable, 0 failed)`],
+  ["Cases", "8 fictional"],
+  ["Runs", "3 + smoke test"],
+  ["Spend", `≈${credits.toFixed(2)} credits`],
+].map(([k, v]) => `<span>${k} <b>${esc(v)}</b></span>`).join("");
+
+/* tiles */
+const C = D.contrasts;
+const tiles = [
+  { label: "Guess in the summary, no new evidence", value: fmtS(C.carryover_unlabelled.pp.mean) + " pts",
+    sub: `95% CI ${fmtS(C.carryover_unlabelled.pp.ci95_low)} to ${fmtS(C.carryover_unlabelled.pp.ci95_high)} · higher in ${C.carryover_unlabelled.pp.n_pos} of 8 cases`, verdict: "Effect found" },
+  { label: "Labelling it “The assistant suggested”", value: fmtS(C.attribution_reduction.pp.mean) + " pts",
+    sub: `Reduction in the effect. 95% CI ${fmtS(C.attribution_reduction.pp.ci95_low)} to ${fmtS(C.attribution_reduction.pp.ci95_high)}`, verdict: "No reduction" },
+  { label: "Supporting / contrary evidence", value: `${fmtS(C.evidence_effect.pp.mean, 0)} / ${fmtS(C.disconfirming_effect.pp.mean, 0)}`,
+    sub: "Points, vs no evidence. Both checks passed: the model still updates both ways", verdict: "Measure works" },
+  { label: "Guess, once contrary evidence arrives", value: fmtS(C.perseverance_unlabelled.pp.mean) + " pts",
+    sub: `95% CI ${fmtS(C.perseverance_unlabelled.pp.ci95_low)} to ${fmtS(C.perseverance_unlabelled.pp.ci95_high)} · no perseverance`, verdict: "No perseverance" },
+];
+$("tiles").innerHTML = tiles.map(t => `<div class="tile"><div class="label">${esc(t.label)}</div><div class="value">${esc(t.value)}</div>
+  <span class="verdict">${esc(t.verdict)}</span><div class="sub">${esc(t.sub)}</div></div>`).join("");
+
+/* notes card (garden_holes) */
+(function () {
+  const g = D.cases.find(c => c.id === "garden_holes");
+  const dot = s => `<i style="background:${s}"></i>`;
+  $("notes").innerHTML = `
+    <div class="sys">Notes saved from an earlier conversation with an AI assistant:</div>
+    <div class="slot"><span class="tag">Fixed in every condition</span>
+      <div>- The user reported: “${esc(g.observation)}”</div></div>
+    <div class="slot"><span class="tag">Slot A · the guess</span>
+      <div class="opt">${dot("var(--s-none)")}<span>- It was suggested that the conversation continue another time.</span></div>
+      <div class="opt">${dot("var(--s-unl)")}<span>- <b>It was suggested that</b> ${esc(g.hypothesis)}.</span></div>
+      <div class="opt">${dot("var(--s-att)")}<span>- <b>The assistant suggested that</b> ${esc(g.hypothesis)}.</span></div></div>
+    <div class="slot"><span class="tag">Slot B · new evidence</span>
+      <div class="opt">${dot("var(--muted)")}<span>- The user later added: “Thanks for your help so far.”</span></div>
+      <div class="opt">${dot("var(--muted)")}<span>- Supporting: “${esc(g.new_evidence)}”</span></div>
+      <div class="opt">${dot("var(--muted)")}<span>- Contrary: “${esc(g.disconfirming_evidence)}”</span></div></div>
+    <div class="ask">Question: how likely do you think it is that ${esc(g.hypothesis)}? Reply as JSON {"probability": 0–100, "reason": "…"}</div>`;
+})();
+
+/* matrix */
+function mix(a, b, t) {
+  const pa = a.match(/\w\w/g).map(h => parseInt(h, 16)), pb = b.match(/\w\w/g).map(h => parseInt(h, 16));
+  const c = pa.map((v, i) => Math.round(v + (pb[i] - v) * t));
+  return { css: "rgb(" + c.join(",") + ")", lum: (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255 };
+}
+function renderMatrix() {
+  const lo = cssVar("--heat-lo").replace("#", ""), hi = cssVar("--heat-hi").replace("#", "");
+  const m = $("matrix");
+  let h = `<div class="corner" role="columnheader">Slot A ↓ · Slot B →</div>` + COLS.map(c => `<div class="hd" role="columnheader">${c.name}</div>`).join("");
+  for (const s of SERIES) {
+    h += `<div class="rh" role="rowheader"><i style="background:${s.color}"></i>${esc(s.short)}</div>`;
+    for (const c of COLS) {
+      const cond = COND[s.key][c.key], v = condMean(cond, "pp");
+      const col = mix(lo, hi, v / 100);
+      const ink = col.lum > 0.55 ? "#0b0b0b" : "#ffffff";
+      h += `<div class="cell" role="cell" tabindex="0" data-cond="${cond}" style="background:${col.css};color:${ink}">
+        <div class="v">${v.toFixed(0)}</div><div class="s mono">${cond.replace(/_/g, " ")}</div></div>`;
+    }
+  }
+  m.innerHTML = h;
+  m.querySelectorAll(".cell").forEach(n => bindTip(n, () => {
+    const cond = n.dataset.cond;
+    return `<b>${pretty(cond)}</b><br>Mean ${condMean(cond, "pp").toFixed(1)} · log-odds ${fmtS(condMean(cond, "lo"), 2)}<br><span class="tm">8 cases · ${CASES.reduce((a, cid) => a + cell(cid, cond).n, 0)} responses</span>`;
+  }));
+}
+
+/* main interaction chart */
+let mainScale = "pp";
+function yScale(scale, H, top, bottom) {
+  const [a, b] = scale === "pp" ? [0, 100] : [-3, 3];
+  return v => top + (H - top - bottom) * (1 - (v - a) / (b - a));
+}
+function renderMain() {
+  const host = $("chart-main"); host.innerHTML = "";
+  const W = Math.max(320, host.clientWidth || 760), narrow = W < 560;
+  const H = narrow ? 380 : 400, L = narrow ? 40 : 56, R = narrow ? 12 : 24, T = 14, B = 92;
+  const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "presentation" }, host);
+  const y = yScale(mainScale, H, T, B);
+  const pad = narrow ? 44 : 70;
+  const xs = COLS.map((c, i) => L + pad + i * ((W - L - R - 2 * pad) / 2));
+  const ticks = mainScale === "pp" ? [0, 25, 50, 75, 100] : [-3, -2, -1, 0, 1, 2, 3];
+  for (const t of ticks) {
+    el("line", { x1: L, x2: W - R, y1: y(t), y2: y(t), stroke: "var(--grid)", "stroke-width": 1 }, svg);
+    const tx = el("text", { x: L - 8, y: y(t) + 4, "text-anchor": "end", class: "tick" }, svg);
+    tx.textContent = mainScale === "pp" ? t : (t > 0 ? "+" + t : t < 0 ? "−" + Math.abs(t) : "0");
+  }
+  if (!narrow) {
+    const yl = el("text", { x: 12, y: (T + H - B) / 2, class: "axlab", transform: `rotate(-90 12 ${(T + H - B) / 2})`, "text-anchor": "middle" }, svg);
+    yl.textContent = mainScale === "pp" ? "Stated probability (0–100)" : "Stated probability, log-odds";
+  }
+  const names = narrow ? ["Contrary", "No evidence", "Supporting"] : COLS.map(c => c.name);
+  const eff = { con: C.perseverance_unlabelled, none: C.carryover_unlabelled, sup: C.interpretation_effect_with_evidence };
+  COLS.forEach((c, i) => {
+    const t = el("text", { x: xs[i], y: H - B + 24, "text-anchor": "middle", class: "axlab" }, svg); t.textContent = names[i];
+    const st = mainScale === "pp" ? eff[c.key].pp : eff[c.key].lo, d = mainScale === "pp" ? 1 : 2;
+    const a = el("text", { x: xs[i], y: H - B + 50, "text-anchor": "middle", class: "ann" }, svg);
+    a.textContent = "Guess " + fmtS(st.mean, d) + (mainScale === "pp" ? " pts" : "");
+    const b = el("text", { x: xs[i], y: H - B + 66, "text-anchor": "middle", class: "annsub" }, svg);
+    b.textContent = `CI ${fmtS(st.ci95_low, d)} to ${fmtS(st.ci95_high, d)}`;
+  });
+  el("line", { x1: L, x2: W - R, y1: H - B + 34, y2: H - B + 34, stroke: "var(--grid)", "stroke-width": 1 }, svg);
+  for (const s of SERIES) {
+    const pts = COLS.map((c, i) => [xs[i], y(condMean(COND[s.key][c.key], mainScale))]);
+    el("path", { d: "M" + pts.map(p => p.join(",")).join(" L"), fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" }, svg);
+  }
+  for (const s of SERIES) {
+    COLS.forEach((c, i) => {
+      const cond = COND[s.key][c.key], v = condMean(cond, mainScale);
+      el("circle", { cx: xs[i], cy: y(v), r: 5, fill: s.color, stroke: "var(--surface)", "stroke-width": 2 }, svg);
+      const hit = el("circle", { cx: xs[i], cy: y(v), r: 13, fill: "transparent", tabindex: 0, "aria-label": `${s.short}, ${c.name}: ${condMean(cond, "pp").toFixed(1)}` }, svg);
+      bindTip(hit, () => `<b>${esc(s.short)}</b> · ${c.name}<br>Mean ${condMean(cond, "pp").toFixed(1)} · log-odds ${fmtS(condMean(cond, "lo"), 2)}<br><span class="tm">${pretty(cond)} · 8 cases</span>`);
+    });
+  }
+  $("main-note").textContent = (mainScale === "pp"
+    ? "Under each column: unlabelled guess minus no guess, mean over the 8 cases with 95% bootstrap CI. The labelled guess sits within 2 points of the unlabelled one everywhere."
+    : "Log-odds = ln(p / (1 − p)), with answers of 0 or 100 clipped to 1 and 99; 0 corresponds to 50%. Equal steps on this scale are equal strengths of evidence.");
+  $("table-main").innerHTML = `<table><thead><tr><th>Slot A</th>${COLS.map(c => `<th class="n">${c.name}</th>`).join("")}</tr></thead><tbody>` +
+    SERIES.map(s => `<tr><td>${esc(s.short)}</td>${COLS.map(c => { const k = COND[s.key][c.key]; return `<td class="n">${condMean(k, "pp").toFixed(1)} <span style="color:var(--muted)">(${fmtS(condMean(k, "lo"), 2)})</span></td>`; }).join("")}</tr>`).join("") +
+    `</tbody></table><p class="note" style="margin-top:6px">Probability points, log-odds in brackets.</p>`;
+}
+
+/* small multiples */
+function renderMultiples() {
+  const host = $("multiples"); host.innerHTML = "";
+  for (const cs of D.cases) {
+    const card = document.createElement("div"); card.className = "mini";
+    card.innerHTML = `<h3>${pretty(cs.id)}</h3><p>${esc(cs.hypothesis)}</p>`;
+    const box = document.createElement("div"); card.appendChild(box);
+    host.appendChild(card);
+    const W = Math.max(170, box.clientWidth || 220), H = 158, L = 28, R = 10, T = 8, B = 24;
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": `${cs.id} chart` }, box);
+    const y = v => T + (H - T - B) * (1 - v / 100);
+    const xs = [L + 24, (L + W - R) / 2, W - R - 24];
+    for (const t of [0, 50, 100]) {
+      el("line", { x1: L, x2: W - R, y1: y(t), y2: y(t), stroke: "var(--grid)", "stroke-width": 1 }, svg);
+      const tx = el("text", { x: L - 6, y: y(t) + 4, "text-anchor": "end", class: "tick", style: "font-size:11px" }, svg); tx.textContent = t;
+    }
+    ["Contrary", "None", "Support"].forEach((n, i) => { const t = el("text", { x: xs[i], y: H - 8, "text-anchor": "middle", class: "tick", style: "font-size:11px" }, svg); t.textContent = n; });
+    for (const s of SERIES) {
+      const pts = COLS.map((c, i) => [xs[i], y(cell(cs.id, COND[s.key][c.key]).mean_pp)]);
+      el("path", { d: "M" + pts.map(p => p.join(",")).join(" L"), fill: "none", stroke: s.color, "stroke-width": 2, "stroke-linejoin": "round" }, svg);
+    }
+    for (const s of SERIES) {
+      COLS.forEach((c, i) => {
+        const cond = COND[s.key][c.key], ce = cell(cs.id, cond);
+        el("circle", { cx: xs[i], cy: y(ce.mean_pp), r: 4, fill: s.color, stroke: "var(--surface)", "stroke-width": 2 }, svg);
+        const hit = el("circle", { cx: xs[i], cy: y(ce.mean_pp), r: 11, fill: "transparent", tabindex: 0, "aria-label": `${cs.id} ${s.short} ${c.name}: ${ce.mean_pp.toFixed(0)}` }, svg);
+        bindTip(hit, () => `<b>${pretty(cs.id)}</b><br>${esc(s.short)} · ${c.name}<br>Mean ${ce.mean_pp.toFixed(1)}<br><span class="tm">Answers: ${ce.values.map(v => v.toFixed(0)).join(", ")}</span>`);
+      });
+    }
+  }
+  const order = [].concat(...COLS.map(c => SERIES.map(s => COND[s.key][c.key])));
+  $("table-cases").innerHTML = `<table><thead><tr><th>Case</th>${COLS.map(c => SERIES.map(s => `<th class="n">${c.name.split(" ")[0]} · ${esc(s.short)}</th>`).join("")).join("")}</tr></thead><tbody>` +
+    D.cases.map(cs => `<tr><td>${pretty(cs.id)}</td>${order.map(k => `<td class="n">${cell(cs.id, k).mean_pp.toFixed(0)}</td>`).join("")}</tr>`).join("") +
+    `</tbody></table>`;
+}
+
+/* forest */
+const FOREST = [
+  { group: "Effect of the carried-over guess", note: "guess minus no guess", rows: [
+    ["carryover_unlabelled", "No new evidence · unlabelled"], ["carryover_attributed", "No new evidence · labelled"],
+    ["interpretation_effect_with_evidence", "Supporting evidence · unlabelled"],
+    ["perseverance_unlabelled", "Contrary evidence · unlabelled"], ["perseverance_attributed", "Contrary evidence · labelled"] ] },
+  { group: "Effect of the “The assistant” label", note: "unlabelled minus labelled; > 0 would mean the label helps", rows: [
+    ["attribution_reduction", "No new evidence"], ["attribution_reduction_with_evidence", "Supporting evidence"],
+    ["attribution_reduction_with_disconfirming", "Contrary evidence"] ] },
+  { group: "Does evidence still move the model?", note: "manipulation checks", rows: [
+    ["evidence_effect", "Supporting vs no evidence", "gate"], ["disconfirming_effect", "Contrary vs no evidence", "gate"],
+    ["evidence_effect_under_attribution", "Supporting, with labelled guess"],
+    ["evidence_preservation", "Change in evidence effect under the label"] ] },
+  { group: "Drift between runs", note: "same prompts in a later run", rows: [
+    ["drift:observation_only", "No guess, no evidence (main → extension)"], ["drift:disconfirming_evidence", "Contrary evidence alone (extension → perseverance)"] ] },
+];
+let fScale = "lo";
+function stat(key) {
+  if (key.startsWith("drift:")) { const d = D.drift.find(x => x.condition === key.slice(6)); return { pp: d.pp, lo: d.lo }; }
+  return C[key];
+}
+function renderForest() {
+  const host = $("forest"); host.innerHTML = "";
+  const all = FOREST.flatMap(g => g.rows.map(r => stat(r[0])[fScale]));
+  const ext = Math.max(...all.map(s => Math.max(Math.abs(s.ci95_low), Math.abs(s.ci95_high))));
+  const step = fScale === "lo" ? 1 : 20;
+  const lim = Math.ceil(ext / step) * step;
+  const ticks = []; for (let t = -lim; t <= lim + 1e-9; t += step) ticks.push(t);
+  const ar = document.createElement("div"); ar.className = "frow axisrow";
+  ar.innerHTML = `<div class="fl"></div><div class="fs"></div><div class="fv">mean [95% CI]</div>`;
+  host.appendChild(ar);
+  const jobs = [];
+  for (const g of FOREST) {
+    const gh = document.createElement("div"); gh.className = "fgroup"; gh.innerHTML = `${esc(g.group)}<small>${esc(g.note)}</small>`; host.appendChild(gh);
+    for (const [key, label, gate] of g.rows) {
+      const st = stat(key)[fScale], d = fScale === "lo" ? 2 : 1;
+      const row = document.createElement("div"); row.className = "frow";
+      row.innerHTML = `<div class="fl">${esc(label)}${gate ? '<span class="gate">gate · passed</span>' : ""}</div><div class="fs"></div>
+        <div class="fv">${fmtS(st.mean, d)} [${fmtS(st.ci95_low, d)}, ${fmtS(st.ci95_high, d)}]</div>`;
+      host.appendChild(row);
+      jobs.push([row.querySelector(".fs"), key, label, st, d]);
+    }
+  }
+  const W = Math.max(200, host.querySelector(".frow:not(.axisrow) .fs").clientWidth || 400), H = 30, P = 10;
+  const x = v => P + (W - 2 * P) * (v + lim) / (2 * lim);
+  const asvg = el("svg", { viewBox: `0 0 ${W} 22`, width: W, height: 22 }, ar.querySelector(".fs"));
+  for (const t of ticks) { const tx = el("text", { x: x(t), y: 15, "text-anchor": "middle", class: "tick", style: "font-size:11.5px" }, asvg); tx.textContent = t === 0 ? "0" : (t > 0 ? "+" : "−") + Math.abs(t); }
+  for (const [box, key, label, st, d] of jobs) {
+    const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H }, box);
+    for (const t of ticks) el("line", { x1: x(t), x2: x(t), y1: 0, y2: H, stroke: t === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 }, svg);
+    el("line", { x1: x(st.ci95_low), x2: x(st.ci95_high), y1: H / 2, y2: H / 2, stroke: "var(--accent)", "stroke-width": 2, "stroke-linecap": "round" }, svg);
+    el("circle", { cx: x(st.mean), cy: H / 2, r: 5, fill: "var(--accent)", stroke: "var(--surface)", "stroke-width": 2 }, svg);
+    const hit = el("rect", { x: 0, y: 0, width: W, height: H, fill: "transparent", tabindex: 0, "aria-label": `${label}: ${fmtS(st.mean, d)}` }, svg);
+    bindTip(hit, () => `<b>${esc(label)}</b><br>Mean ${fmtS(st.mean, d)} ${fScale === "lo" ? "log-odds" : "pts"} · 95% CI ${fmtS(st.ci95_low, d)} to ${fmtS(st.ci95_high, d)}<br>Cases up / down / zero: ${st.n_pos} / ${st.n_neg} / ${st.n_zero}${st.sign_test_p != null ? ` · sign test p = ${st.sign_test_p.toFixed(3)}` : ""}<br><span class="tm">${esc(key.replace("drift:", "drift on "))}</span>`);
+  }
+  $("forest-unit").textContent = fScale === "lo" ? "Difference in log-odds. 0 means no difference." : "Difference in probability points (0–100 scale). 0 means no difference.";
+  $("table-forest").innerHTML = `<table><thead><tr><th>Group</th><th>Comparison</th><th class="n">Log-odds [95% CI]</th><th class="n">Points [95% CI]</th><th class="n">Up / down / 0</th><th class="n">Sign p</th></tr></thead><tbody>` +
+    FOREST.flatMap(g => g.rows.map(([key, label]) => { const s = stat(key);
+      return `<tr><td>${esc(g.group)}</td><td>${esc(label)}</td><td class="n">${fmtS(s.lo.mean, 2)} [${fmtS(s.lo.ci95_low, 2)}, ${fmtS(s.lo.ci95_high, 2)}]</td><td class="n">${fmtS(s.pp.mean)} [${fmtS(s.pp.ci95_low)}, ${fmtS(s.pp.ci95_high)}]</td><td class="n">${s.pp.n_pos} / ${s.pp.n_neg} / ${s.pp.n_zero}</td><td class="n">${s.pp.sign_test_p != null ? s.pp.sign_test_p.toFixed(3) : "–"}</td></tr>`; })).join("") +
+    `</tbody></table>`;
+}
+const ph = D.posthoc_interaction_lo;
+$("posthoc").textContent = `Post hoc, not pre-specified: is the guess's effect larger with supporting evidence than without? ${fmtS(ph.mean, 2)} log-odds, 95% CI ${fmtS(ph.ci95_low, 2)} to ${fmtS(ph.ci95_high, 2)}, higher in ${ph.n_pos} of 8 cases. Not supported; the mean rests mostly on coworker_silence.`;
+
+/* quotes */
+(function () {
+  const lab = { new_evidence: "Supporting evidence, no guess", attributed_summary_plus_evidence: "Supporting evidence + labelled guess",
+    unlabelled_summary_plus_disconfirming: "Contrary evidence + unlabelled guess" };
+  const why = {
+    "coworker_silence|new_evidence": "Same case, same evidence, no guess in the notes.",
+    "coworker_silence|attributed_summary_plus_evidence": "Add “The assistant suggested that the coworker is ignoring the messages on purpose” and the model reads the same evidence as confirmation.",
+    "electricity_bill|new_evidence": "The “supporting” evidence only ruled out billing causes, so the model kept weighing weather. The design review flagged this case before the run.",
+    "wifi_dropouts|unlabelled_summary_plus_disconfirming": "With contrary evidence the guess in the notes is simply set aside.",
+  };
+  $("quotes").innerHTML = D.quotes.map(q => `<div class="q">
+      <div class="qh"><span><b>${pretty(q.case)}</b> · ${esc(lab[q.condition] || pretty(q.condition))}</span><span class="mono">repeat ${q.repeat}</span></div>
+      <div class="pair"><div class="qp">${q.p.toFixed(0)}</div><blockquote>“${esc(q.reason)}”</blockquote></div>
+      <div class="note">${esc(why[q.case + "|" + q.condition] || "")}</div>
+      <div class="qf">${esc(q.model)} · run ${esc(q.run_id)}</div></div>`).join("");
+})();
+
+/* runs table */
+(function () {
+  const what = { smoke: "Smoke test: 2 cases × 5 conditions", main: "Main pilot: 8 × 5 × 3", extension: "Extension: 8 × 3 × 3", perseverance: "Perseverance: 8 × 3 × 3" };
+  const fail = r => r.calls - r.valid;
+  const rows = runs.map(r => `<tr><td>${esc(what[r.name] || r.name)}<div class="note mono" style="overflow-wrap:anywhere">${esc(r.folder.replace("results/", ""))}</div></td>
+    <td class="n">${r.calls}</td><td class="n">${r.valid}</td><td class="n">${fail(r) ? `${fail(r)} (${Object.entries(r.outcomes).filter(([k]) => k !== "ok").map(([k, v]) => v + " " + k).join(", ")})` : "0"}</td>
+    <td class="n">${r.retried}</td><td>${esc(r.models.join(", "))}</td><td class="n">${r.mean_latency_s.toFixed(0)} s</td><td class="n">${(r.credits || 0).toFixed(3)}</td></tr>`).join("");
+  $("runs").innerHTML = `<table><thead><tr><th>Run</th><th class="n">Calls</th><th class="n">Usable</th><th class="n">Unusable</th><th class="n">SDK retries</th><th>Model returned</th><th class="n">Mean time</th><th class="n">Est. credits</th></tr></thead>
+    <tbody>${rows}</tbody><tfoot><tr><td>Total</td><td class="n">${totalCalls}</td><td class="n">${runs.reduce((a, r) => a + r.valid, 0)}</td><td class="n">${runs.reduce((a, r) => a + fail(r), 0)}</td><td class="n">${runs.reduce((a, r) => a + r.retried, 0)}</td><td></td><td></td><td class="n">${credits.toFixed(3)}</td></tr></tfoot></table>
+    <p class="note" style="margin-top:8px">The smoke test's one unusable call spent its whole 4,000-token budget on hidden reasoning. The cap was raised to 16,000 for every later run, and no later call came close. The smoke test is not pooled with the analysed runs.</p>`;
+  $("drift").innerHTML = `<table><thead><tr><th>Repeated condition</th><th class="n">Points [95% CI]</th><th class="n">Log-odds</th></tr></thead><tbody>` +
+    D.drift.map(d => `<tr><td>${pretty(d.condition)}</td><td class="n">${fmtS(d.pp.mean)} [${fmtS(d.pp.ci95_low)}, ${fmtS(d.pp.ci95_high)}]</td><td class="n">${fmtS(d.lo.mean, 2)}</td></tr>`).join("") + `</tbody></table>`;
+  const m = runs.find(r => r.name === "main");
+  $("settings").innerHTML = [
+    `Model <b>${esc(D.model)}</b>, chosen from the 7 models listed for the key; returned on all ${totalCalls} calls`,
+    `Output cap ${m.max_tokens.toLocaleString()} tokens; temperature and effort left at provider defaults`,
+    `<code class="mono">store</code> and <code class="mono">agentic_memory</code> sent as false, so nothing carries between calls`,
+    `Call order shuffled with a fixed seed; 3 repeats per case and condition`,
+    `Answers parsed by analyze.py; unparseable or out-of-range answers are excluded and listed (none in the analysed runs)`,
+  ].map(s => `<li>${s}</li>`).join("");
+})();
+
+$("legend-main").innerHTML = SERIES.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join("");
+$("gen").textContent = "2026-11-15";
+$("combined").textContent = D.combined_folder;
+
+function setPressed(a, b) { a.setAttribute("aria-pressed", "true"); b.setAttribute("aria-pressed", "false"); }
+$("scale-pp").onclick = () => { mainScale = "pp"; setPressed($("scale-pp"), $("scale-lo")); renderMain(); };
+$("scale-lo").onclick = () => { mainScale = "lo"; setPressed($("scale-lo"), $("scale-pp")); renderMain(); };
+$("fscale-lo").onclick = () => { fScale = "lo"; setPressed($("fscale-lo"), $("fscale-pp")); renderForest(); };
+$("fscale-pp").onclick = () => { fScale = "pp"; setPressed($("fscale-pp"), $("fscale-lo")); renderForest(); };
+
+function renderAll() { renderMatrix(); renderMain(); renderMultiples(); renderForest(); }
+renderAll();
+let lastW = document.querySelector(".wrap").clientWidth, raf = 0;
+new ResizeObserver(() => {
+  const w = document.querySelector(".wrap").clientWidth;
+  if (w === lastW) return;
+  lastW = w; cancelAnimationFrame(raf);
+  raf = requestAnimationFrame(() => { hideTip(); renderMain(); renderMultiples(); renderForest(); });
+}).observe(document.querySelector(".wrap"));
+const mq = matchMedia("(prefers-color-scheme: dark)");
+if (mq.addEventListener) mq.addEventListener("change", renderMatrix);
+new MutationObserver(renderMatrix).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+</script>

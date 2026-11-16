@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+validation_runs/
+share_for_gemini/
+*.pyc
+.DS_Store

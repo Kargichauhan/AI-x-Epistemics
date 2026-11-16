@@ -1,0 +1,4 @@
+# Versions the self-test passed with (2026-11-13). Only the SDK for the provider you use is needed.
+anthropic==2.8.0
+openai==3.51.0
+adaption==0.19.0   # official Adaption SDK (docs.adaptionlabs.ai); needed for --provider adaption

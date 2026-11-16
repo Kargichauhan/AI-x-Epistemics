@@ -1,0 +1,1408 @@
+{
+ "cells": {
+  "garden_holes|observation_only": {
+   "mean_pp": 25.0,
+   "mean_logodds": -1.1208389403611405,
+   "n": 6,
+   "values": [
+    30.0,
+    25.0,
+    25.0,
+    25.0,
+    15.0,
+    30.0
+   ]
+  },
+  "garden_holes|unlabelled_summary": {
+   "mean_pp": 40.0,
+   "mean_logodds": -0.4175876561651226,
+   "n": 3,
+   "values": [
+    30.0,
+    50.0,
+    40.0
+   ]
+  },
+  "garden_holes|attributed_summary": {
+   "mean_pp": 56.666666666666664,
+   "mean_logodds": 0.2824326201290678,
+   "n": 3,
+   "values": [
+    30.0,
+    70.0,
+    70.0
+   ]
+  },
+  "garden_holes|new_evidence": {
+   "mean_pp": 90.0,
+   "mean_logodds": 2.1972245773362196,
+   "n": 3,
+   "values": [
+    90.0,
+    90.0,
+    90.0
+   ]
+  },
+  "garden_holes|attributed_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "coworker_silence|observation_only": {
+   "mean_pp": 16.666666666666668,
+   "mean_logodds": -1.6184988239653677,
+   "n": 6,
+   "values": [
+    15.0,
+    20.0,
+    15.0,
+    20.0,
+    15.0,
+    15.0
+   ]
+  },
+  "coworker_silence|unlabelled_summary": {
+   "mean_pp": 30.0,
+   "mean_logodds": -0.8675632284814613,
+   "n": 3,
+   "values": [
+    25.0,
+    25.0,
+    40.0
+   ]
+  },
+  "coworker_silence|attributed_summary": {
+   "mean_pp": 26.666666666666668,
+   "mean_logodds": -1.0269633606314326,
+   "n": 3,
+   "values": [
+    20.0,
+    30.0,
+    30.0
+   ]
+  },
+  "coworker_silence|new_evidence": {
+   "mean_pp": 46.666666666666664,
+   "mean_logodds": -0.13515503603605478,
+   "n": 3,
+   "values": [
+    40.0,
+    40.0,
+    60.0
+   ]
+  },
+  "coworker_silence|attributed_summary_plus_evidence": {
+   "mean_pp": 86.66666666666667,
+   "mean_logodds": 1.92691450526411,
+   "n": 3,
+   "values": [
+    90.0,
+    90.0,
+    80.0
+   ]
+  },
+  "car_squeal|observation_only": {
+   "mean_pp": 17.5,
+   "mean_logodds": -1.5604477082539985,
+   "n": 6,
+   "values": [
+    15.0,
+    20.0,
+    20.0,
+    20.0,
+    15.0,
+    15.0
+   ]
+  },
+  "car_squeal|unlabelled_summary": {
+   "mean_pp": 40.0,
+   "mean_logodds": -0.46209812037329684,
+   "n": 3,
+   "values": [
+    20.0,
+    75.0,
+    25.0
+   ]
+  },
+  "car_squeal|attributed_summary": {
+   "mean_pp": 41.666666666666664,
+   "mean_logodds": -0.36620409622270333,
+   "n": 3,
+   "values": [
+    25.0,
+    70.0,
+    30.0
+   ]
+  },
+  "car_squeal|new_evidence": {
+   "mean_pp": 86.66666666666667,
+   "mean_logodds": 1.8888088960374774,
+   "n": 3,
+   "values": [
+    85.0,
+    85.0,
+    90.0
+   ]
+  },
+  "car_squeal|attributed_summary_plus_evidence": {
+   "mean_pp": 93.33333333333333,
+   "mean_logodds": 2.6953675118896996,
+   "n": 3,
+   "values": [
+    90.0,
+    95.0,
+    95.0
+   ]
+  },
+  "peace_lily|observation_only": {
+   "mean_pp": 78.33333333333333,
+   "mean_logodds": 1.2904003369692971,
+   "n": 6,
+   "values": [
+    80.0,
+    75.0,
+    80.0,
+    80.0,
+    80.0,
+    75.0
+   ]
+  },
+  "peace_lily|unlabelled_summary": {
+   "mean_pp": 85.0,
+   "mean_logodds": 1.7346010553881064,
+   "n": 3,
+   "values": [
+    85.0,
+    85.0,
+    85.0
+   ]
+  },
+  "peace_lily|attributed_summary": {
+   "mean_pp": 85.0,
+   "mean_logodds": 1.7346010553881064,
+   "n": 3,
+   "values": [
+    85.0,
+    85.0,
+    85.0
+   ]
+  },
+  "peace_lily|new_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "peace_lily|attributed_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "parcel_missing|observation_only": {
+   "mean_pp": 15.833333333333334,
+   "mean_logodds": -1.6956027442900534,
+   "n": 6,
+   "values": [
+    10.0,
+    15.0,
+    15.0,
+    20.0,
+    20.0,
+    15.0
+   ]
+  },
+  "parcel_missing|unlabelled_summary": {
+   "mean_pp": 25.0,
+   "mean_logodds": -1.0986122886681098,
+   "n": 3,
+   "values": [
+    25.0,
+    25.0,
+    25.0
+   ]
+  },
+  "parcel_missing|attributed_summary": {
+   "mean_pp": 26.666666666666668,
+   "mean_logodds": -1.0148408125744743,
+   "n": 3,
+   "values": [
+    25.0,
+    30.0,
+    25.0
+   ]
+  },
+  "parcel_missing|new_evidence": {
+   "mean_pp": 45.0,
+   "mean_logodds": -0.20204526785677182,
+   "n": 3,
+   "values": [
+    40.0,
+    45.0,
+    50.0
+   ]
+  },
+  "parcel_missing|attributed_summary_plus_evidence": {
+   "mean_pp": 73.33333333333333,
+   "mean_logodds": 1.0148408125744743,
+   "n": 3,
+   "values": [
+    75.0,
+    75.0,
+    70.0
+   ]
+  },
+  "cat_ears|observation_only": {
+   "mean_pp": 46.666666666666664,
+   "mean_logodds": -0.13515503603605475,
+   "n": 6,
+   "values": [
+    40.0,
+    50.0,
+    40.0,
+    50.0,
+    50.0,
+    50.0
+   ]
+  },
+  "cat_ears|unlabelled_summary": {
+   "mean_pp": 53.333333333333336,
+   "mean_logodds": 0.13515503603605475,
+   "n": 3,
+   "values": [
+    50.0,
+    50.0,
+    60.0
+   ]
+  },
+  "cat_ears|attributed_summary": {
+   "mean_pp": 53.333333333333336,
+   "mean_logodds": 0.13515503603605475,
+   "n": 3,
+   "values": [
+    50.0,
+    50.0,
+    60.0
+   ]
+  },
+  "cat_ears|new_evidence": {
+   "mean_pp": 85.0,
+   "mean_logodds": 1.7346010553881064,
+   "n": 3,
+   "values": [
+    85.0,
+    85.0,
+    85.0
+   ]
+  },
+  "cat_ears|attributed_summary_plus_evidence": {
+   "mean_pp": 86.66666666666667,
+   "mean_logodds": 1.8888088960374774,
+   "n": 3,
+   "values": [
+    90.0,
+    85.0,
+    85.0
+   ]
+  },
+  "electricity_bill|observation_only": {
+   "mean_pp": 70.0,
+   "mean_logodds": 0.8574305444343323,
+   "n": 6,
+   "values": [
+    75.0,
+    75.0,
+    60.0,
+    70.0,
+    70.0,
+    70.0
+   ]
+  },
+  "electricity_bill|unlabelled_summary": {
+   "mean_pp": 73.33333333333333,
+   "mean_logodds": 1.0148408125744743,
+   "n": 3,
+   "values": [
+    75.0,
+    75.0,
+    70.0
+   ]
+  },
+  "electricity_bill|attributed_summary": {
+   "mean_pp": 73.33333333333333,
+   "mean_logodds": 1.0148408125744743,
+   "n": 3,
+   "values": [
+    75.0,
+    75.0,
+    70.0
+   ]
+  },
+  "electricity_bill|new_evidence": {
+   "mean_pp": 65.0,
+   "mean_logodds": 0.6239340589671971,
+   "n": 3,
+   "values": [
+    65.0,
+    70.0,
+    60.0
+   ]
+  },
+  "electricity_bill|attributed_summary_plus_evidence": {
+   "mean_pp": 73.33333333333333,
+   "mean_logodds": 1.0148408125744743,
+   "n": 3,
+   "values": [
+    75.0,
+    70.0,
+    75.0
+   ]
+  },
+  "wifi_dropouts|observation_only": {
+   "mean_pp": 75.83333333333333,
+   "mean_logodds": 1.1465593007434067,
+   "n": 6,
+   "values": [
+    75.0,
+    75.0,
+    80.0,
+    75.0,
+    75.0,
+    75.0
+   ]
+  },
+  "wifi_dropouts|unlabelled_summary": {
+   "mean_pp": 76.66666666666667,
+   "mean_logodds": 1.1945063128187035,
+   "n": 3,
+   "values": [
+    75.0,
+    80.0,
+    75.0
+   ]
+  },
+  "wifi_dropouts|attributed_summary": {
+   "mean_pp": 73.33333333333333,
+   "mean_logodds": 1.0346486193980746,
+   "n": 3,
+   "values": [
+    80.0,
+    65.0,
+    75.0
+   ]
+  },
+  "wifi_dropouts|new_evidence": {
+   "mean_pp": 91.66666666666667,
+   "mean_logodds": 2.4462960446129594,
+   "n": 3,
+   "values": [
+    95.0,
+    90.0,
+    90.0
+   ]
+  },
+  "wifi_dropouts|attributed_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "garden_holes|unlabelled_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "garden_holes|disconfirming_evidence": {
+   "mean_pp": 7.5,
+   "mean_logodds": -2.5708317782513297,
+   "n": 6,
+   "values": [
+    5.0,
+    5.0,
+    10.0,
+    10.0,
+    10.0,
+    5.0
+   ]
+  },
+  "coworker_silence|unlabelled_summary_plus_evidence": {
+   "mean_pp": 88.33333333333333,
+   "mean_logodds": 2.0430167366868486,
+   "n": 3,
+   "values": [
+    85.0,
+    90.0,
+    90.0
+   ]
+  },
+  "coworker_silence|disconfirming_evidence": {
+   "mean_pp": 7.5,
+   "mean_logodds": -2.5708317782513297,
+   "n": 6,
+   "values": [
+    5.0,
+    10.0,
+    10.0,
+    10.0,
+    5.0,
+    5.0
+   ]
+  },
+  "car_squeal|unlabelled_summary_plus_evidence": {
+   "mean_pp": 93.33333333333333,
+   "mean_logodds": 2.6953675118896996,
+   "n": 3,
+   "values": [
+    95.0,
+    90.0,
+    95.0
+   ]
+  },
+  "car_squeal|disconfirming_evidence": {
+   "mean_pp": 10.833333333333334,
+   "mean_logodds": -2.1201206570115336,
+   "n": 6,
+   "values": [
+    10.0,
+    10.0,
+    15.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  "peace_lily|unlabelled_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "peace_lily|disconfirming_evidence": {
+   "mean_pp": 22.5,
+   "mean_logodds": -1.2424533248940002,
+   "n": 6,
+   "values": [
+    25.0,
+    20.0,
+    25.0,
+    20.0,
+    25.0,
+    20.0
+   ]
+  },
+  "parcel_missing|unlabelled_summary_plus_evidence": {
+   "mean_pp": 66.66666666666667,
+   "mean_logodds": 0.7077055350608324,
+   "n": 3,
+   "values": [
+    75.0,
+    60.0,
+    65.0
+   ]
+  },
+  "parcel_missing|disconfirming_evidence": {
+   "mean_pp": 10.0,
+   "mean_logodds": -2.197224577336219,
+   "n": 6,
+   "values": [
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  "cat_ears|unlabelled_summary_plus_evidence": {
+   "mean_pp": 90.0,
+   "mean_logodds": 2.1972245773362196,
+   "n": 3,
+   "values": [
+    90.0,
+    90.0,
+    90.0
+   ]
+  },
+  "cat_ears|disconfirming_evidence": {
+   "mean_pp": 20.0,
+   "mean_logodds": -1.396398464755963,
+   "n": 6,
+   "values": [
+    20.0,
+    20.0,
+    20.0,
+    20.0,
+    15.0,
+    25.0
+   ]
+  },
+  "electricity_bill|unlabelled_summary_plus_evidence": {
+   "mean_pp": 80.0,
+   "mean_logodds": 1.4065025683920356,
+   "n": 3,
+   "values": [
+    80.0,
+    75.0,
+    85.0
+   ]
+  },
+  "electricity_bill|disconfirming_evidence": {
+   "mean_pp": 13.333333333333334,
+   "mean_logodds": -1.8888088960374774,
+   "n": 6,
+   "values": [
+    15.0,
+    10.0,
+    15.0,
+    10.0,
+    15.0,
+    15.0
+   ]
+  },
+  "wifi_dropouts|unlabelled_summary_plus_evidence": {
+   "mean_pp": 95.0,
+   "mean_logodds": 2.94443897916644,
+   "n": 3,
+   "values": [
+    95.0,
+    95.0,
+    95.0
+   ]
+  },
+  "wifi_dropouts|disconfirming_evidence": {
+   "mean_pp": 0.8333333333333334,
+   "mean_logodds": -4.320006371639898,
+   "n": 6,
+   "values": [
+    0.0,
+    0.0,
+    0.0,
+    5.0,
+    0.0,
+    0.0
+   ]
+  },
+  "garden_holes|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 5.0,
+   "mean_logodds": -2.9444389791664403,
+   "n": 3,
+   "values": [
+    5.0,
+    5.0,
+    5.0
+   ]
+  },
+  "garden_holes|attributed_summary_plus_disconfirming": {
+   "mean_pp": 5.0,
+   "mean_logodds": -2.9444389791664403,
+   "n": 3,
+   "values": [
+    5.0,
+    5.0,
+    5.0
+   ]
+  },
+  "coworker_silence|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 11.666666666666666,
+   "mean_logodds": -2.043016736686848,
+   "n": 3,
+   "values": [
+    15.0,
+    10.0,
+    10.0
+   ]
+  },
+  "coworker_silence|attributed_summary_plus_disconfirming": {
+   "mean_pp": 10.0,
+   "mean_logodds": -2.197224577336219,
+   "n": 3,
+   "values": [
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  "car_squeal|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 10.0,
+   "mean_logodds": -2.197224577336219,
+   "n": 3,
+   "values": [
+    10.0,
+    10.0,
+    10.0
+   ]
+  },
+  "car_squeal|attributed_summary_plus_disconfirming": {
+   "mean_pp": 8.333333333333334,
+   "mean_logodds": -2.4462960446129594,
+   "n": 3,
+   "values": [
+    10.0,
+    10.0,
+    5.0
+   ]
+  },
+  "peace_lily|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 23.333333333333332,
+   "mean_logodds": -1.1945063128187032,
+   "n": 3,
+   "values": [
+    25.0,
+    20.0,
+    25.0
+   ]
+  },
+  "peace_lily|attributed_summary_plus_disconfirming": {
+   "mean_pp": 28.333333333333332,
+   "mean_logodds": -0.931069336480839,
+   "n": 3,
+   "values": [
+    30.0,
+    25.0,
+    30.0
+   ]
+  },
+  "parcel_missing|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 6.666666666666667,
+   "mean_logodds": -2.6953675118896996,
+   "n": 3,
+   "values": [
+    10.0,
+    5.0,
+    5.0
+   ]
+  },
+  "parcel_missing|attributed_summary_plus_disconfirming": {
+   "mean_pp": 5.0,
+   "mean_logodds": -2.9444389791664403,
+   "n": 3,
+   "values": [
+    5.0,
+    5.0,
+    5.0
+   ]
+  },
+  "cat_ears|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 20.0,
+   "mean_logodds": -1.4065025683920356,
+   "n": 3,
+   "values": [
+    20.0,
+    25.0,
+    15.0
+   ]
+  },
+  "cat_ears|attributed_summary_plus_disconfirming": {
+   "mean_pp": 16.666666666666668,
+   "mean_logodds": -1.676812640464145,
+   "n": 3,
+   "values": [
+    25.0,
+    10.0,
+    15.0
+   ]
+  },
+  "electricity_bill|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 13.333333333333334,
+   "mean_logodds": -1.8888088960374774,
+   "n": 3,
+   "values": [
+    15.0,
+    10.0,
+    15.0
+   ]
+  },
+  "electricity_bill|attributed_summary_plus_disconfirming": {
+   "mean_pp": 15.0,
+   "mean_logodds": -1.7346010553881064,
+   "n": 3,
+   "values": [
+    15.0,
+    15.0,
+    15.0
+   ]
+  },
+  "wifi_dropouts|unlabelled_summary_plus_disconfirming": {
+   "mean_pp": 0.0,
+   "mean_logodds": -4.59511985013459,
+   "n": 3,
+   "values": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "wifi_dropouts|attributed_summary_plus_disconfirming": {
+   "mean_pp": 1.6666666666666667,
+   "mean_logodds": -4.044892893145207,
+   "n": 3,
+   "values": [
+    0.0,
+    5.0,
+    0.0
+   ]
+  }
+ },
+ "cond_means": {
+  "attributed_summary": {
+   "pp": 54.58333333333333,
+   "lo": 0.22420873426214596
+  },
+  "attributed_summary_plus_disconfirming": {
+   "pp": 11.25,
+   "lo": -2.3649718132200443
+  },
+  "attributed_summary_plus_evidence": {
+   "pp": 87.29166666666667,
+   "lo": 2.1717611844799443
+  },
+  "disconfirming_evidence": {
+   "pp": 11.5625,
+   "lo": -2.288334481022219
+  },
+  "new_evidence": {
+   "pp": 75.625,
+   "lo": 1.4372629134519466
+  },
+  "observation_only": {
+   "pp": 43.229166666666664,
+   "lo": -0.3545191338449473
+  },
+  "unlabelled_summary": {
+   "pp": 52.916666666666664,
+   "lo": 0.15415524039116854
+  },
+  "unlabelled_summary_plus_disconfirming": {
+   "pp": 11.25,
+   "lo": -2.3706231790577514
+  },
+  "unlabelled_summary_plus_evidence": {
+   "pp": 87.91666666666667,
+   "lo": 2.2353917333581195
+  }
+ },
+ "contrasts": {
+  "carryover_unlabelled": {
+   "desc": "Unlabelled summary minus observation only. >0 means the carried-over interpretation raised stated probability.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 9.687500000000002,
+    "median": 7.916666666666669,
+    "ci95_low": 5.416666666666669,
+    "ci95_high": 14.375,
+    "n_pos": 8,
+    "n_neg": 0,
+    "n_zero": 0,
+    "sign_test_p": 0.0078125
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.508674374236116,
+    "median": 0.5205955870203764,
+    "ci95_low": 0.292967829934758,
+    "ci95_high": 0.7372632186728867,
+    "n_pos": 8,
+    "n_neg": 0,
+    "n_zero": 0,
+    "sign_test_p": 0.0078125
+   }
+  },
+  "carryover_attributed": {
+   "desc": "Attributed summary minus observation only.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 11.354166666666666,
+    "median": 8.333333333333336,
+    "ci95_low": 4.687500000000002,
+    "ci95_high": 19.166666666666668,
+    "n_pos": 7,
+    "n_neg": 1,
+    "n_zero": 0,
+    "sign_test_p": 0.0703125
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.5787278681070933,
+    "median": 0.5178680908763722,
+    "ci95_low": 0.26522909516935245,
+    "ci95_high": 0.9229078052209996,
+    "n_pos": 7,
+    "n_neg": 1,
+    "n_zero": 0,
+    "sign_test_p": 0.0703125
+   }
+  },
+  "attribution_reduction": {
+   "desc": "Unlabelled minus attributed. >0 means attribution reduced the carry-over.",
+   "pp": {
+    "n_cases": 8,
+    "mean": -1.6666666666666652,
+    "median": 0.0,
+    "ci95_low": -6.249999999999999,
+    "ci95_high": 1.4583333333333357,
+    "n_pos": 2,
+    "n_neg": 3,
+    "n_zero": 3,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": -0.0700534938709774,
+    "median": 0.0,
+    "ci95_low": -0.26649889797039117,
+    "ci95_high": 0.0693430218809456,
+    "n_pos": 2,
+    "n_neg": 3,
+    "n_zero": 3,
+    "sign_test_p": 1.0
+   }
+  },
+  "evidence_effect": {
+   "desc": "New evidence minus observation only. Manipulation check: must be clearly >0.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 32.395833333333336,
+    "median": 29.58333333333333,
+    "ci95_low": 16.770833333333336,
+    "ci95_high": 48.85416666666667,
+    "n_pos": 7,
+    "n_neg": 1,
+    "n_zero": 0,
+    "sign_test_p": 0.0703125
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 1.791782047296894,
+    "median": 1.573798059315212,
+    "ci95_low": 1.0590869186281089,
+    "ci95_high": 2.518643585470527,
+    "n_pos": 7,
+    "n_neg": 1,
+    "n_zero": 0,
+    "sign_test_p": 0.0703125
+   }
+  },
+  "evidence_effect_under_attribution": {
+   "desc": "Attributed + evidence minus attributed. Response to new evidence when the interpretation is attributed.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 32.708333333333336,
+    "median": 35.833333333333336,
+    "ci95_low": 18.958333333333336,
+    "ci95_high": 45.833333333333336,
+    "n_pos": 7,
+    "n_neg": 0,
+    "n_zero": 1,
+    "sign_test_p": 0.015625
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 1.9475524502177983,
+    "median": 1.969735992458657,
+    "ci95_low": 1.2601356799186467,
+    "ci95_high": 2.5617156117736073,
+    "n_pos": 7,
+    "n_neg": 0,
+    "n_zero": 1,
+    "sign_test_p": 0.015625
+   }
+  },
+  "evidence_preservation": {
+   "desc": "Evidence effect under attribution minus evidence effect alone. About 0 means responsiveness preserved; <0 means attribution blunted updating.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 0.3124999999999982,
+    "median": 0.0,
+    "ci95_low": -11.145833333333337,
+    "ci95_high": 12.083333333333334,
+    "n_pos": 4,
+    "n_neg": 4,
+    "n_zero": 0,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.15577040292090444,
+    "median": 0.05869712702219834,
+    "ci95_low": -0.26831734847722283,
+    "ci95_high": 0.6432680776772037,
+    "n_pos": 4,
+    "n_neg": 4,
+    "n_zero": 0,
+    "sign_test_p": 1.0
+   }
+  },
+  "disconfirming_effect": {
+   "desc": "Disconfirming evidence minus observation only. Second manipulation check: must be clearly <0, i.e. the model also updates downward.",
+   "pp": {
+    "n_cases": 8,
+    "mean": -31.666666666666664,
+    "median": -22.083333333333332,
+    "ci95_low": -49.89583333333333,
+    "ci95_high": -15.416666666666666,
+    "n_pos": 0,
+    "n_neg": 8,
+    "n_zero": 0,
+    "sign_test_p": 0.0078125
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": -1.9338153471772714,
+    "median": -1.3556181333050488,
+    "ci95_low": -3.1025078859173276,
+    "ci95_high": -1.0206795793537444,
+    "n_pos": 0,
+    "n_neg": 8,
+    "n_zero": 0,
+    "sign_test_p": 0.0078125
+   }
+  },
+  "interpretation_effect_with_evidence": {
+   "desc": "Unlabelled summary + evidence minus evidence alone. >0 means the carried-over interpretation still raises the estimate when new evidence is present.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 12.291666666666664,
+    "median": 5.833333333333329,
+    "ci95_low": 4.583333333333332,
+    "ci95_high": 22.291666666666664,
+    "n_pos": 7,
+    "n_neg": 0,
+    "n_zero": 1,
+    "sign_test_p": 0.015625
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.7981288199061728,
+    "median": 0.7648914556275294,
+    "ci95_low": 0.44471359463294974,
+    "ci95_high": 1.2645061095811179,
+    "n_pos": 7,
+    "n_neg": 0,
+    "n_zero": 1,
+    "sign_test_p": 0.015625
+   }
+  },
+  "attribution_reduction_with_evidence": {
+   "desc": "Unlabelled + evidence minus attributed + evidence. >0 means attribution reduced the carry-over when evidence is present; <0 means the label increased it.",
+   "pp": {
+    "n_cases": 8,
+    "mean": 0.625,
+    "median": 0.0,
+    "ci95_low": -1.8749999999999982,
+    "ci95_high": 2.916666666666668,
+    "n_pos": 3,
+    "n_neg": 1,
+    "n_zero": 4,
+    "sign_test_p": 0.625
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.06363054887817503,
+    "median": 0.0,
+    "ci95_low": -0.07662376890527293,
+    "ci95_high": 0.20332561059970378,
+    "n_pos": 3,
+    "n_neg": 1,
+    "n_zero": 4,
+    "sign_test_p": 0.625
+   }
+  },
+  "perseverance_unlabelled": {
+   "desc": "Unlabelled summary + disconfirming evidence minus disconfirming evidence alone. >0 means the carried-over guess kept the estimate up against contrary evidence.",
+   "pp": {
+    "n_cases": 8,
+    "mean": -0.3125000000000003,
+    "median": -0.4166666666666667,
+    "ci95_low": -1.6666666666666667,
+    "ci95_high": 1.2499999999999998,
+    "n_pos": 2,
+    "n_neg": 4,
+    "n_zero": 2,
+    "sign_test_p": 0.6875
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": -0.08228869803553282,
+    "median": -0.043604011980379,
+    "ci95_low": -0.2696738246333654,
+    "ci95_high": 0.1379471369005325,
+    "n_pos": 2,
+    "n_neg": 5,
+    "n_zero": 1,
+    "sign_test_p": 0.453125
+   }
+  },
+  "perseverance_attributed": {
+   "desc": "Attributed summary + disconfirming evidence minus disconfirming evidence alone.",
+   "pp": {
+    "n_cases": 8,
+    "mean": -0.31250000000000006,
+    "median": -0.8333333333333333,
+    "ci95_low": -2.604166666666666,
+    "ci95_high": 2.083333333333333,
+    "n_pos": 4,
+    "n_neg": 4,
+    "n_zero": 0,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": -0.07663733219782569,
+    "median": -0.06310316752940548,
+    "ci95_low": -0.3504599942458168,
+    "ci95_high": 0.1778410237213845,
+    "n_pos": 4,
+    "n_neg": 4,
+    "n_zero": 0,
+    "sign_test_p": 1.0
+   }
+  },
+  "attribution_reduction_with_disconfirming": {
+   "desc": "Unlabelled + disconfirming minus attributed + disconfirming. >0 means attribution reduced perseverance.",
+   "pp": {
+    "n_cases": 8,
+    "mean": -1.942890293094024e-16,
+    "median": 0.833333333333333,
+    "ci95_low": -1.875,
+    "ci95_high": 1.666666666666666,
+    "n_pos": 4,
+    "n_neg": 3,
+    "n_zero": 1,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": -0.005651365837707131,
+    "median": 0.0771039203246855,
+    "ci95_low": -0.20813079750365915,
+    "ci95_high": 0.17494564712913413,
+    "n_pos": 4,
+    "n_neg": 3,
+    "n_zero": 1,
+    "sign_test_p": 1.0
+   }
+  }
+ },
+ "drift": [
+  {
+   "condition": "observation_only",
+   "pp": {
+    "n_cases": 8,
+    "mean": 0.6249999999999989,
+    "median": 0.0,
+    "ci95_low": -1.458333333333334,
+    "ci95_high": 2.916666666666666,
+    "n_pos": 2,
+    "n_neg": 3,
+    "n_zero": 3,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.026558062040754442,
+    "median": -0.010132684047128915,
+    "ci95_low": -0.09401851987060598,
+    "ci95_high": 0.16893664994230434,
+    "n_pos": 2,
+    "n_neg": 4,
+    "n_zero": 2,
+    "sign_test_p": 0.6875
+   }
+  },
+  {
+   "condition": "disconfirming_evidence",
+   "pp": {
+    "n_cases": 8,
+    "mean": -0.20833333333333295,
+    "median": 0.0,
+    "ci95_low": -1.0416666666666663,
+    "ci95_high": 0.6250000000000004,
+    "n_pos": 2,
+    "n_neg": 3,
+    "n_zero": 3,
+    "sign_test_p": 1.0
+   },
+   "lo": {
+    "n_cases": 8,
+    "mean": 0.03498961061465919,
+    "median": -0.010104103636072503,
+    "ci95_low": -0.11274090480350002,
+    "ci95_high": 0.21096951033394468,
+    "n_pos": 2,
+    "n_neg": 4,
+    "n_zero": 2,
+    "sign_test_p": 0.6875
+   }
+  }
+ ],
+ "runs": [
+  {
+   "name": "smoke",
+   "folder": "results/20261115T003705Z_adaption_qwen3.5-397b_84ae",
+   "conditions": [
+    "observation_only",
+    "unlabelled_summary",
+    "attributed_summary",
+    "new_evidence",
+    "attributed_summary_plus_evidence"
+   ],
+   "cases": 2,
+   "repeats": 1,
+   "max_tokens": 4000,
+   "calls": 10,
+   "valid": 9,
+   "outcomes": {
+    "ok": 9,
+    "truncated": 1
+   },
+   "retried": 0,
+   "models": [
+    "qwen3.5-397b"
+   ],
+   "credits": 0.062834,
+   "usage": {
+    "input_tokens": 1766,
+    "cached_input_tokens": 0,
+    "output_tokens": 17675,
+    "reasoning_tokens": 17397
+   },
+   "created": "2026-11-15T00:37:05.462+00:00",
+   "finished": "2026-11-15T00:41:24.224+00:00",
+   "mean_latency_s": 25.8625
+  },
+  {
+   "name": "main",
+   "folder": "results/20261115T004224Z_adaption_qwen3.5-397b_756a",
+   "conditions": [
+    "observation_only",
+    "unlabelled_summary",
+    "attributed_summary",
+    "new_evidence",
+    "attributed_summary_plus_evidence"
+   ],
+   "cases": 8,
+   "repeats": 3,
+   "max_tokens": 16000,
+   "calls": 120,
+   "valid": 120,
+   "outcomes": {
+    "ok": 120
+   },
+   "retried": 5,
+   "models": [
+    "qwen3.5-397b"
+   ],
+   "credits": 0.751783,
+   "usage": {
+    "input_tokens": 21612,
+    "cached_input_tokens": 0,
+    "output_tokens": 211399,
+    "reasoning_tokens": 207619
+   },
+   "created": "2026-11-15T00:42:24.963+00:00",
+   "finished": "2026-11-15T01:32:28.363+00:00",
+   "mean_latency_s": 25.021349999999998
+  },
+  {
+   "name": "extension",
+   "folder": "results/20261115T055209Z_adaption_qwen3.5-397b_a2fb",
+   "conditions": [
+    "observation_only",
+    "unlabelled_summary_plus_evidence",
+    "disconfirming_evidence"
+   ],
+   "cases": 8,
+   "repeats": 3,
+   "max_tokens": 16000,
+   "calls": 72,
+   "valid": 72,
+   "outcomes": {
+    "ok": 72
+   },
+   "retried": 1,
+   "models": [
+    "qwen3.5-397b"
+   ],
+   "credits": 0.39307,
+   "usage": {
+    "input_tokens": 13095,
+    "cached_input_tokens": 0,
+    "output_tokens": 110248,
+    "reasoning_tokens": 107971
+   },
+   "created": "2026-11-15T05:52:09.347+00:00",
+   "finished": "2026-11-15T06:13:04.777+00:00",
+   "mean_latency_s": 17.429138888888886
+  },
+  {
+   "name": "perseverance",
+   "folder": "results/20261115T154518Z_adaption_qwen3.5-397b_d910",
+   "conditions": [
+    "disconfirming_evidence",
+    "unlabelled_summary_plus_disconfirming",
+    "attributed_summary_plus_disconfirming"
+   ],
+   "cases": 8,
+   "repeats": 3,
+   "max_tokens": 16000,
+   "calls": 72,
+   "valid": 72,
+   "outcomes": {
+    "ok": 72
+   },
+   "retried": 1,
+   "models": [
+    "qwen3.5-397b"
+   ],
+   "credits": 0.392549,
+   "usage": {
+    "input_tokens": 13356,
+    "cached_input_tokens": 0,
+    "output_tokens": 110058,
+    "reasoning_tokens": 107802
+   },
+   "created": "2026-11-15T15:45:18.081+00:00",
+   "finished": "2026-11-15T16:02:36.635+00:00",
+   "mean_latency_s": 14.416138888888888
+  }
+ ],
+ "quotes": [
+  {
+   "run": "main",
+   "run_id": "20261115T004224Z_adaption_qwen3.5-397b_756a",
+   "case": "coworker_silence",
+   "condition": "new_evidence",
+   "repeat": 1,
+   "p": 40.0,
+   "reason": "Most communication gaps stem from oversight or workload rather than intentional ignoring.",
+   "model": "qwen3.5-397b"
+  },
+  {
+   "run": "main",
+   "run_id": "20261115T004224Z_adaption_qwen3.5-397b_756a",
+   "case": "coworker_silence",
+   "condition": "attributed_summary_plus_evidence",
+   "repeat": 2,
+   "p": 90.0,
+   "reason": "The evidence of them replying to others while skipping you strongly suggests intentional avoidance.",
+   "model": "qwen3.5-397b"
+  },
+  {
+   "run": "main",
+   "run_id": "20261115T004224Z_adaption_qwen3.5-397b_756a",
+   "case": "electricity_bill",
+   "condition": "new_evidence",
+   "repeat": 3,
+   "p": 60.0,
+   "reason": "While weather variations are common, a malfunctioning high-draw appliance is a plausible explanation for a significant unexplained increase.",
+   "model": "qwen3.5-397b"
+  },
+  {
+   "run": "perseverance",
+   "run_id": "20261115T154518Z_adaption_qwen3.5-397b_d910",
+   "case": "wifi_dropouts",
+   "condition": "unlabelled_summary_plus_disconfirming",
+   "repeat": 1,
+   "p": 0.0,
+   "reason": "Wi-Fi interference cannot cause wired Ethernet connections to lose internet.",
+   "model": "qwen3.5-397b"
+  }
+ ],
+ "posthoc_interaction_lo": {
+  "n_cases": 8,
+  "mean": 0.2894544456700569,
+  "median": 0.25253689858583217,
+  "ci95_low": -0.056714619781774,
+  "ci95_high": 0.6805684700996797,
+  "n_pos": 6,
+  "n_neg": 2,
+  "n_zero": 0,
+  "sign_test_p": 0.2890625
+ },
+ "cases": [
+  {
+   "id": "garden_holes",
+   "hypothesis": "a dog is digging the holes",
+   "observation": "For the last three mornings I've found small fresh holes dug in my vegetable bed, and a few seedlings have been knocked over.",
+   "new_evidence": "The family whose garden backs onto the bed got a puppy last week, and I've found a gap under the shared fence about the width of a small dog.",
+   "disconfirming_evidence": "None of the neighbours has a dog, and the fence around the garden has no gaps."
+  },
+  {
+   "id": "coworker_silence",
+   "hypothesis": "the coworker is ignoring the messages on purpose",
+   "observation": "A coworker who normally answers my messages within an hour hasn't replied to two messages I sent them yesterday afternoon.",
+   "new_evidence": "The team chat shows they replied to several other people's messages yesterday afternoon and again this morning, but still not to mine.",
+   "disconfirming_evidence": "Their calendar shows back-to-back meetings since yesterday lunchtime, and they haven't posted anywhere else either."
+  },
+  {
+   "id": "car_squeal",
+   "hypothesis": "the squeal is coming from a worn bearing in one of the engine's pulleys rather than from the drive belt slipping",
+   "observation": "My car has started making a high-pitched squeal for the first minute or so after I start it on cold mornings.",
+   "new_evidence": "A mechanic sprayed a little water on the drive belt while it was squealing, and the noise didn't change at all.",
+   "disconfirming_evidence": "A mechanic sprayed a little water on the drive belt while it was squealing, and the noise stopped for a few seconds."
+  },
+  {
+   "id": "peace_lily",
+   "hypothesis": "the peace lily is being overwatered",
+   "observation": "Over the past two weeks several leaves on my peace lily have turned yellow, starting with the lower ones.",
+   "new_evidence": "Its pot has no drainage hole, and when I checked today the soil was still wet a few centimetres down even though I last watered it eight days ago.",
+   "disconfirming_evidence": "The pot drains freely, and the soil was dry a few centimetres down three days after I last watered it."
+  },
+  {
+   "id": "parcel_missing",
+   "hypothesis": "the parcel was delivered to the wrong address",
+   "observation": "A parcel's tracking page has said 'out for delivery' since yesterday morning, but nothing has arrived.",
+   "new_evidence": "The tracking page now says it was delivered at 2:14 pm yesterday, but I was home all afternoon, nobody came to the door, and nothing was left outside.",
+   "disconfirming_evidence": "The tracking page now says the van broke down yesterday and the parcel will be delivered tomorrow."
+  },
+  {
+   "id": "cat_ears",
+   "hypothesis": "the cat has ear mites",
+   "observation": "My cat has been scratching at its ears a lot this week and shaking its head.",
+   "new_evidence": "My other cat, which sleeps curled up with this one, started scratching its ears in the same way two days ago.",
+   "disconfirming_evidence": "Our other cat, which sleeps curled up with this one, has no ear symptoms, and this cat's ears look clean inside."
+  },
+  {
+   "id": "electricity_bill",
+   "hypothesis": "a faulty appliance is using extra electricity",
+   "observation": "My electricity bill this month is about 40% higher than for the same month last year, and I don't think my habits have changed.",
+   "new_evidence": "The bill shows the same price per kWh as last year, covers the same number of days, and is based on an actual meter reading rather than an estimate.",
+   "disconfirming_evidence": "The bill shows the price per kWh went up by about 35% since last year."
+  },
+  {
+   "id": "wifi_dropouts",
+   "hypothesis": "interference from a neighbour's Wi-Fi network is causing the dropouts",
+   "observation": "My home Wi-Fi has been dropping out several times each evening for the past week, but it seems fine during the day.",
+   "new_evidence": "A Wi-Fi scanner app shows that a new network with a very strong signal appeared about a week ago on the same channel as mine.",
+   "disconfirming_evidence": "Devices plugged into the router by cable lose their internet connection at the same times."
+  }
+ ],
+ "combined_folder": "results/combined/20261115T160249234183Z_3runs",
+ "model": "qwen3.5-397b"
+}
