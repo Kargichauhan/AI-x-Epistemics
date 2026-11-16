@@ -1,4 +1,4 @@
-# Summary carry-over pilot
+# Carry-over pilot
 
 Apart Research, AI x Epistemics Sprint.
 
